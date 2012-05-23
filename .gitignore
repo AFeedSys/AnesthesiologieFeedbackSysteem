@@ -36,3 +36,4 @@ Thumbs.db
 # Sensitive Data folder #
 #########################
 data/
+/nbproject/private/
