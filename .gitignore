@@ -1,4 +1,4 @@
-# Compiled source #
+﻿# Compiled source #
 ###################
 *.com
 *.class
@@ -26,6 +26,10 @@
 *.sql
 *.sqlite
 
+# Exception of sql-queries #
+############################
+!/sql-scripts/*.sql
+
 # OS generated files #
 ######################
 .DS_Store*
@@ -35,5 +39,5 @@ Thumbs.db
 
 # Sensitive Data folder #
 #########################
-data/
+/data/
 /nbproject/private/
