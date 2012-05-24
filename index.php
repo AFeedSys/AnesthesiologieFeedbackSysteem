@@ -4,7 +4,8 @@
     
     <body>
         <?php
-        echo "Hello World";
+        $test = "Hello World";
+        echo $test;
         ?>
     </body>
 </html>
