@@ -17,32 +17,37 @@ heigth:30px;
 .menu
 {
 height:750px;
-width:200px;
+width:20%;
 float:left;
+border-style:ridge;
 }
 
 .content1
 {
-background-color:#EEEEEE;
+background-color:pink;
 height:250px;
-width:800px;
-float:left;
+width:80%;
+/*position:inherit;*/
+float:inside;
 }
 
 .content2
 {
 background-color:red;
 height:250px;
-width:800px;
+/*width:800px;*/
 float:left;
+clear:right;
+
 }
 
 .content3
 {
 background-color:green;
 height:250px;
-width:800px;
+/*width:800px;*/
 float:left;
+
 }
 
 .footer
@@ -51,4 +56,9 @@ background-color:yellow;
 height:50px;
 width:1000px;
 float:left;
+}
+
+.clear 
+{
+clear: both;
 }
