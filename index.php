@@ -6,8 +6,8 @@
     </head>
     
     <body>
-        <div id="<?php echo $placeholders[0]; ?>" style="width:600px;height:300px"></div>
-        <div id="<?php echo $placeholders[1]; ?>" style="width:600px;height:300px"></div>
-        <div id="<?php echo $placeholders[2]; ?>" style="width:600px;height:300px"></div>
+        <?php foreach ($placeholders as $placeholder) {?>
+        <div id="<?php echo $placeholder; ?>" style="width:600px;height:300px"></div>
+        <?php } ?>
     </body>
 </html>
