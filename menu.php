@@ -36,11 +36,10 @@
 
 	<input type="button" onclick="show_confirm()" value="Uitloggen" />
 
-	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 	<!-- <input type="button" value="Mail sturen" onclick="mailto:afs@amc.uva.nl" /> -->
 
-	<p>
+	<p class="email">
 		<a href="mailto:afs@amc.uva.nl">Mail sturen</a>
 	</p>
 

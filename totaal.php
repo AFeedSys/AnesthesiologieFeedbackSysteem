@@ -3,7 +3,7 @@
 
 <head>
 
-<link rel="stylesheet" type="text/css" href="styles/totaal.css">
+<link rel="stylesheet" type="text/css" href="styles/totaal2.css">
 <link rel="stylesheet" type="text/css" href="styles/stijl.css">
 <script type="text/javascript" src="script.js"></script>
 
@@ -25,23 +25,14 @@
         ?>
 	</div>
 
-	<div class="content1">
-            
-            <h2>hallo</h2>
-	</div>
 
-        <div class="clear">
-        </div>
+            <div class="content1">blok 1 </div>
+            <div class="content2">blok 2 </div>
+            <div class="content3">blok 3 </div>
             
-	<div class="content2">
             
-            <h2>hallo2</h2>
-	</div>
+	
 
-	<div class="content3">
-            
-            <h2>hallo3</h2>
-	</div>
 
 	<div class="footer"> 
         <?php

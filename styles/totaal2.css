@@ -1,0 +1,80 @@
+html, body{ 
+ margin:0; 
+ padding:0; 
+ } 
+ 
+#pagewidth{ }
+ 
+.header{
+ position:relative; 
+ height:6.5%; 
+ background-color:#80C66F; 
+ width:100%;
+ display:block;
+ overflow:auto;
+} 
+ 
+.menu{
+    height: 87%;
+ width:20%; 
+ float:left; 
+ position:relative; 
+ background-color:#807CAF; 
+ }
+ 
+.content1,.content2,.content3{
+ background-color: #3CFFFF;  
+ position: relative;
+ height:29%; 
+ width:80%;
+ float:right; 
+ 
+ }
+ 
+.footer{
+ height:6.5%; 
+  background-color:#80C6AF; 
+ clear:both;
+ display:block;
+ overflow:auto;
+} 
+
+.email{
+    position:absolute;
+    bottom:0;
+}
+ 
+
+ 
+ 
+/* ******************************************************************** */ 
+/* Clearfix: http://csscreator.com/attributes/containedfloat.php        */
+/* ******************************************************************** */
+.clearfix:after {
+ content: "."; 
+ display: block; 
+height: 0; 
+ clear: both; 
+ visibility: hidden;
+ }
+ 
+.clearfix{display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix{height: 1%;}
+.clearfix{display: block;}
+/* End hide from IE-mac */  
+
+
+ 
+ 
+/* ******************************************************************** */ 
+/*                      printer styles                                  */ 
+/* ******************************************************************** */ 
+     
+ @media print{ 
+/*hide the left column when printing*/ 
+#leftcol{display:none;} 
+#twocols, #maincol{width:100%; float:none;}
+}
+
