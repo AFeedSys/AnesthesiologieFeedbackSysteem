@@ -1,36 +1,91 @@
-<?php 
-    require 'flotWriter.php';
-?>
+<?
+include 'magic.php';
 
-<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="lib/flot/excanvas.min.js"></script><![endif]-->
-<script language="javascript" type="text/javascript" src="./lib/jquery.js"></script>
-<script language="javascript" type="text/javascript" src="./lib/flot/jquery.flot.js"></script>
-<script language="javascript" type="text/javascript">
-$(function () {
-    <?php
-        $datasets = NULL;
-        $datasets = array_push( writeDataset("bottom", $generaal) );
-        $datasets = array_push( writeDataset("middle", $maand) );
-        //$datasets = array_push( writeDataset("top", $procotol, null) );
-        
-        $placeholders = NULL;
-        foreach ($datasets as $dataset) {
-            $placeholders = array_push("hold_" . $dataset);
+class IndexWriter {
+    const generaal = "generaal";
+    const maand = "maand";
+    const protocol = "protocol";
+
+    private $datasets;
+    private $placeholders;
+    private $typeOrder;
+
+    function __construct($placeholders, $typeOrder){
+        if(count($placeholders) != count($typeOrder)) {
+            writeError("Array-size doesn't match");
+            echo '<strong>Placeholders</strong> ';
+            var_dump($placeholders);
+            echo '<strong>TypeOrder</strong>';
+            var_dump($typeOrder);
         }
-        
-        invokePlots($placeholders, $datasets);
-        ?> 
+
+        $this->placeholders = $placeholders;
+        $this->typeOrder = $typeOrder;
+    }
+
+    public function getPlaceholders() {
+        return $this->placeholders;
+    }
+
+    public function setPlaceHolders($value) {
+        $this->placeholders = $value;
+    }
+
+    public function getDatasets(){
+        return $this->datasets;
+    }
+
+    public function setDatasets($value) {
+        $this->datasets = $value;
+    }
+
+    public function writePlaceholders($otherPlaceholders) {
+        $toBePlaced = null;
+        $output = "";
+        if(is_null($otherPlaceholders)) {
+            $toBePlaced = $this->placeholders;               
+        } else {
+            $toBePlaced = $otherPlaceholders;
+        }
+        foreach ($toBePlaced as $placeholder) {
+            $output .= '<div id="' . $placeholder . '"></div>';
+        }
+
+        return $output;
+    }
     
-    function onDataReceived(series) {
+    public function writeDataSets($otherPlaceholders, $otherTypes) {
+        $toBePlaced = null;
+        $toBeUsed = null;
         
     }
     
-    $.ajax({
-            url: './handlers/flotrequest.php',
-            method: 'GET',
-            dataType: 'json',
-            success: onDataReceived
-        });
-    
-});
-</script>
+    public function writeDataset($target, $type, $option ){
+        $output = "";
+        switch ($type) {
+            case self::general:
+                //TestData
+                $output .= '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
+                break;
+            case self::maand:
+                if ($option == null){
+                    //TestData
+                    $output .= '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
+
+                } else {
+
+                }
+                break;
+            case self::protocol:
+                if ($option == null) {
+                    die ("Protocol specifiek dataset heeft een protocol nodig als optie");
+                }
+                    $output .=  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
+                break;
+            default:
+                die("Unkown graph-type");
+        }
+        return $output;
+    } 
+}
+?>

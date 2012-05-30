@@ -10,7 +10,7 @@
 <body>
     <h1>Flot Examples</h1>
 
-    <div id="placeholder" style="width:600px;height:300px"></div>
+    <div id="placeholder" style="width:1200px;height:300px"></div>
 
     <p>One of the goals of Flot is to support user interactions. Try
     pointing and clicking on the points.</p>
@@ -26,7 +26,7 @@
 <script type="text/javascript">
 $(function () {
     var sin = [], cos = [];
-    for (var i = 0; i < 14; i += 0.5) {
+    for (var i = 0; i < 14; i += 1) {
         sin.push([i, Math.sin(i)]);
         cos.push([i, Math.cos(i)]);
     }
