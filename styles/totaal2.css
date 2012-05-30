@@ -15,7 +15,7 @@ html, body{
 } 
  
 .menu{
-    height: 87%;
+ height: 564px;
  width:20%; 
  float:left; 
  position:relative; 
@@ -25,7 +25,7 @@ html, body{
 .content1,.content2,.content3{
  background-color: #3CFFFF;  
  position: relative;
- height:29%; 
+ height:188px; 
  width:80%;
  float:right; 
  
