@@ -11,14 +11,7 @@ class IndexWriter {
     private $typeOrder;
 
     function __construct($placeholders, $typeOrder){
-        if(count($placeholders) != count($typeOrder)) {
-            writeError("Array-size doesn't match");
-            echo '<strong>Placeholders</strong> ';
-            var_dump($placeholders);
-            echo '<strong>TypeOrder</strong>';
-            var_dump($typeOrder);
-        }
-
+        $this->isMatchedSized($placeholders, $typeOrder);
         $this->placeholders = $placeholders;
         $this->typeOrder = $typeOrder;
     }
@@ -39,6 +32,14 @@ class IndexWriter {
         $this->datasets = $value;
     }
 
+    public function getTypeOrder(){
+        return $this->typeOrder;
+    }
+
+    public function setTypeOrder($value) {
+        $this->typeOrder = $value;
+    }
+    
     public function writePlaceholders($otherPlaceholders) {
         $toBePlaced = null;
         $output = "";
@@ -48,44 +49,98 @@ class IndexWriter {
             $toBePlaced = $otherPlaceholders;
         }
         foreach ($toBePlaced as $placeholder) {
-            $output .= '<div id="' . $placeholder . '"></div>';
+            $output .= '<div id="' . $placeholder . '" class="' . $placeholder . '"></div>';
         }
 
         return $output;
     }
     
-    public function writeDataSets($otherPlaceholders, $otherTypes) {
-        $toBePlaced = null;
-        $toBeUsed = null;
+    public function writeInitialDataSets($otherPlaceholders, $otherTypes) {        
+        $datasets = array();
         
+        $toBePlaced = null;
+        $toBeTyped = null;
+        // Check if input is null for custom sets
+        if(is_null($otherPlaceholders)){
+            $toBePlaced = $this->placeholders;
+        } else {
+            $toBePlaced = $otherPlaceholders;
+        }
+        if(is_null($otherTypes)){
+            $toBeTyped = $this->typeOrder;
+        } else {
+            $toBeTyped = $otherTypes;
+        }
+        //Test
+        $this->isMatchedSized($toBePlaced, $toBeTyped);
+        //WriteDatasets
+        for ($i = 0; $i<count($toBePlaced); $i++){
+            array_push($datasets, $this->writeDataset($toBeTyped[$i], $toBeTyped[$i], null));
+        }
+        
+        $this->datasets = $datasets;
+        return $datasets;
     }
     
     public function writeDataset($target, $type, $option ){
-        $output = "";
+        $label = $type;
+        $output = json_encode($label);
         switch ($type) {
-            case self::general:
-                //TestData
-                $output .= '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
+            case self::generaal :
+                //TestData will be initial call
+                $data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
                 break;
-            case self::maand:
+            case self::maand :
                 if ($option == null){
-                    //TestData
-                    $output .= '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
-
+                    //TestData will be initial call
+                    $data = '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
                 } else {
 
                 }
                 break;
-            case self::protocol:
+            case self::protocol :
                 if ($option == null) {
-                    die ("Protocol specifiek dataset heeft een protocol nodig als optie");
+                    //Testdata will be intial dataset-call.
+                    $data =  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
                 }
-                    $output .=  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
+                    
                 break;
             default:
                 die("Unkown graph-type");
         }
+        $output = json_encode($data);
         return $output;
     } 
+    
+    public function scriptWriter(){
+        ?>
+        var plot = $.plot($("#placeholder"),
+           [ { data: sin, label: ""} ], {
+               series: {
+                   bars: { show: true }
+               },
+               grid: { hoverable: true, clickable: true },
+               yaxis: { min: -1.2, max: 1.2 }
+             });
+        
+        $("#placeholder").bind("plotclick", function (event, pos, item) {
+            plot.unhighlight();
+            if (item) {
+            $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+            plot.highlight(item.series, item.datapoint);
+        }
+    });
+        <?
+    }
+    
+    private function isMatchedSized($array1, $array2){
+        if(count($array1) != count($array2)) {
+            writeError("Array-size doesn't match");
+            echo '<strong>Array1:</strong> ';
+            var_dump($array1);
+            echo '<strong>Array2:</strong>';
+            var_dump($array2);
+        }
+    }
 }
 ?>
