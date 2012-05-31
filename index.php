@@ -9,7 +9,7 @@ $placeholders = array("topGraph", "middleGraph", "bottomGraph");
 $typeOrder = array(IndexWriter::protocol, IndexWriter::maand, IndexWriter::generaal);
 $writer = new IndexWriter($placeholders, $typeOrder);
 
-$datasets = $writer->writeInitialDatasets(null, null);
+$datasets = $writer->writeDataSets(null, null);
 ?>
 
 <html>
@@ -22,7 +22,7 @@ $datasets = $writer->writeInitialDatasets(null, null);
         <?= $writer->writePlaceholders(null); ?>
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">
-$(function () {
+    $(function () {
 <?= $writer->scriptWriter(); ?>
     function showTooltip(x, y, contents) {
         $('<div id="tooltip">' + contents + '</div>').css( {

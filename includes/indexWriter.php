@@ -49,13 +49,13 @@ class IndexWriter {
             $toBePlaced = $otherPlaceholders;
         }
         foreach ($toBePlaced as $placeholder) {
-            $output .= '<div id="' . $placeholder . '" class="' . $placeholder . '"></div>';
+            $output .= '<div id="' . $placeholder . '" class="' . $placeholder . '" style="width:600px;height:200px;"></div>';
         }
 
         return $output;
     }
     
-    public function writeInitialDataSets($otherPlaceholders, $otherTypes) {        
+    public function writeDataSets($otherPlaceholders, $otherTypes) {        
         $datasets = array();
         
         $toBePlaced = null;
@@ -88,12 +88,14 @@ class IndexWriter {
         switch ($type) {
             case self::generaal :
                 //TestData will be initial call
-                $data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
+                //$data = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5)';
+                    $data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
                 break;
             case self::maand :
                 if ($option == null){
                     //TestData will be initial call
                     $data = '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
+                    //$data = array(1 => 4,2 => 5,3 => 6,4 => 7,5 => 8);
                 } else {
 
                 }
@@ -101,6 +103,7 @@ class IndexWriter {
             case self::protocol :
                 if ($option == null) {
                     //Testdata will be intial dataset-call.
+                    //$data = array(1 => 0,2 => 0,3 => 0,4 => 0,5 => 0);
                     $data =  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
                 }
                     
@@ -108,29 +111,36 @@ class IndexWriter {
             default:
                 die("Unkown graph-type");
         }
-        $output = json_encode($data);
-        return $output;
+        //$output = json_encode($data);
+        //var_dump($output);
+        return $data;
     } 
     
     public function scriptWriter(){
-        ?>
-        var plot = $.plot($("#placeholder"),
-           [ { data: sin, label: ""} ], {
-               series: {
-                   bars: { show: true }
-               },
-               grid: { hoverable: true, clickable: true },
-               yaxis: { min: -1.2, max: 1.2 }
-             });
-        
-        $("#placeholder").bind("plotclick", function (event, pos, item) {
-            plot.unhighlight();
+        $scriptblock = "";
+        for ($i = 0; $i < count($this->datasets); $i++) {
+    $scriptblock .= 
+        '
+        var data_' . $this->placeholders[$i] . ' = '. $this->datasets[$i] .';
+        var plot_'. $this->placeholders[$i] . ' = $.plot($("#' . $this->placeholders[$i] . '"), [data_' . $this->placeholders[$i] . '], {            
+            bars: { show: true },
+            grid: { hoverable: true, clickable: true },
+            yaxis: { max: 10 }
+        }    
+        );
+
+
+        $("#' . $this->placeholders[$i] . '").bind("plotclick", function (event, pos, item) {
+            plot_'. $this->placeholders[$i] . '.unhighlight();
             if (item) {
-            $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-            plot.highlight(item.series, item.datapoint);
+                alert("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+                plot.highlight(item.series, item.datapoint);
+            };
+        });
+        ';
         }
-    });
-        <?
+        
+        return $scriptblock;
     }
     
     private function isMatchedSized($array1, $array2){
