@@ -1,6 +1,6 @@
 html, body{ 
  margin:0; 
- padding:0; 
+ padding:0px; 
  } 
  
 #pagewidth{ }
@@ -16,18 +16,21 @@ html, body{
  
 .menu{
  height: 564px;
- width:20%; 
+ width:15%; 
  float:left; 
  position:relative; 
- background-color:#807CAF; 
+ background-color:#807CAF;
+ padding-left:8px; 
  }
  
 .content1,.content2,.content3{
  background-color: #3CFFFF;  
  position: relative;
  height:188px; 
- width:80%;
- float:right; 
+ width:84%;
+ float:right;
+ padding-left: 6px;
+ 
  
  }
  
@@ -37,6 +40,7 @@ html, body{
  clear:both;
  display:block;
  overflow:auto;
+ padding:10px; 
 } 
 
 .email{
