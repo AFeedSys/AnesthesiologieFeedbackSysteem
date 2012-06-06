@@ -7,11 +7,14 @@ html, body{
  
 .header{
  position:relative; 
- height:6.5%; 
- background-color:#80C66F; 
+ height:6%; 
+ background-color:#E8F7FF; 
  width:100%;
  display:block;
  overflow:auto;
+ padding-top: 0px;
+ border-bottom-style: solid;
+ border-bottom-width: 2px;
 } 
  
 .menu{
@@ -19,33 +22,54 @@ html, body{
  width:15%; 
  float:left; 
  position:relative; 
- background-color:#807CAF;
+ background-color:#BAE8FF;
  padding-left:8px; 
  }
- 
+  
 .content1,.content2,.content3{
- background-color: #3CFFFF;  
+ background-color:white;  
  position: relative;
  height:188px; 
- width:84%;
+ width:83%;
  float:right;
- padding-left: 6px;
- 
- 
+ padding-left: 6px; 
+ border-left-style: solid;
+ border-left-width: 2px;
  }
  
+ .container{
+ background-color:#BAE8FF; 
+ }
+ 
+ /* .content1{
+  border-top-style: solid;
+  border-top-width: 1px;
+ }
+ 
+ .content3{
+  border-bottom-style: solid;
+  border-bottom-width: 1px; 
+ } */
+ 
 .footer{
- height:6.5%; 
-  background-color:#80C6AF; 
+ height:5%; 
+ background-color:#E8F7FF; 
  clear:both;
  display:block;
  overflow:auto;
- padding:10px; 
+ padding:10px;
+ border-top-style:solid;
+ border-top-width: 2px;
 } 
 
 .email{
     position:absolute;
     bottom:0;
+}
+
+.logo{
+float: left;
+padding-right: 10px;
 }
  
 

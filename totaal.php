@@ -13,34 +13,27 @@
 
 <body>
 
-<!--<div class="container">
--->
-	<div class="header">
-		<h1>AFeedSys</h1>
-	</div>
+<div class="container">
+
+    <div class="header">
+        <h1>
+        <img class="logo" src="amc.jpeg" width="120" height="65" align="middle" title="AMC">
+        AFeedSys</h1>
+    </div>
 
     <div class="menu"> 
-        <?php
-        include 'menu.php'
-        ?>
-	</div>
-
-
-            <div class="content1">blok 1 </div>
-            <div class="content2">blok 2 </div>
-            <div class="content3">blok 3 </div>
+        <?php include 'menu.php' ?>
+    </div>
+    
+    <div class="content1">blok 1 </div>
+    <div class="content2">blok 2 </div>
+    <div class="content3">blok 3 </div>
             
-            
-	
+    <div class="footer"> 
+        <?php include 'footer.php' ?>
+    </div>
 
-
-	<div class="footer"> 
-        <?php
-        include 'footer.php'
-        ?>
-	</div>
-
-<!--</div>-->
+</div>
  
 </body>
 </html>
