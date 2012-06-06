@@ -80,22 +80,23 @@ class IndexWriter {
         
         $this->datasets = $datasets;
         return $datasets;
-    }
+    } 
     
     public function writeDataset($target, $type, $option ){
         $label = $type;
-        $output = json_encode($label);
+        $output = array($label);
+        $data = null;
         switch ($type) {
             case self::generaal :
                 //TestData will be initial call
-                //$data = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5)';
-                    $data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
+                $data = array(-373597200000 => 1, -370918800000 => 2, -368326800000 => 3, -363056400000 => 4, -360378000000 => 5);
+                    //$data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
                 break;
             case self::maand :
                 if ($option == null){
                     //TestData will be initial call
-                    $data = '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
-                    //$data = array(1 => 4,2 => 5,3 => 6,4 => 7,5 => 8);
+                    //$data = '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
+                    $data = array(-373597200000 => 4,-370918800000 => 5, -368326800000 => 6,-363056400000 => 7, -360378000000 => 8);
                 } else {
 
                 }
@@ -103,32 +104,38 @@ class IndexWriter {
             case self::protocol :
                 if ($option == null) {
                     //Testdata will be intial dataset-call.
-                    //$data = array(1 => 0,2 => 0,3 => 0,4 => 0,5 => 0);
-                    $data =  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
+                    $data = array(-373597200000 => 0,-370918800000 => 0, -368326800000 => 0, -363056400000 => 0, -360378000000 => 0);
+                    //$data =  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
                 }
                     
                 break;
             default:
                 die("Unkown graph-type");
         }
-        //$output = json_encode($data);
+        array_push($output,$data);
         //var_dump($output);
-        return $data;
+        return json_encode($output);;
     } 
     
     public function scriptWriter(){
         $scriptblock = "";
         for ($i = 0; $i < count($this->datasets); $i++) {
-    $scriptblock .= 
+            $currentHolder = $this->placeholders[$i];
+            $currentType = $this->typeOrder[$i];
+            $scriptblock .= 
         '
-        var data_' . $this->placeholders[$i] . ' = '. $this->datasets[$i] .';
-        var plot_'. $this->placeholders[$i] . ' = $.plot($("#' . $this->placeholders[$i] . '"), [data_' . $this->placeholders[$i] . '], {            
-            bars: { show: true },
-            grid: { hoverable: true, clickable: true },
-            yaxis: { max: 10 }
-        }    
+        var data_' . $currentHolder . ' = '. $this->datasets[$i] .';
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [{data: data_' . $currentHolder . ', label: "' . $currentType . '"}], {            
+                bars: {
+                    show: true, 
+                    barWidth: 0.9, 
+                    align: "center",
+                    },
+                grid: { hoverable: true, clickable: true },
+                yaxis: { max: 10 },
+                xaxis: { mode: "time" }
+            }    
         );
-
 
         $("#' . $this->placeholders[$i] . '").bind("plotclick", function (event, pos, item) {
             plot_'. $this->placeholders[$i] . '.unhighlight();
@@ -141,6 +148,14 @@ class IndexWriter {
         }
         
         return $scriptblock;
+    }
+    
+    public function writeHoldersForJs(){
+        $out = "";
+        foreach ($toBePlaced as $placeholder) {
+            $out .= "#" . $toBePlaced . ",";
+        }
+        return out;
     }
     
     private function isMatchedSized($array1, $array2){

@@ -23,6 +23,7 @@ $datasets = $writer->writeDataSets(null, null);
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">
     $(function () {
+    
 <?= $writer->scriptWriter(); ?>
     function showTooltip(x, y, contents) {
         $('<div id="tooltip">' + contents + '</div>').css( {
