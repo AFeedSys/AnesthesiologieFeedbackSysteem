@@ -96,12 +96,16 @@ class IndexWriter {
      */
     public function writeDataFlotset($target, $type, $option ){
         $output = array("label" => $type);
-        $labels = array();
-        $datums = array(1325376000*1000, 1328054400*1000, 1330560000*1000, 1333238400*1000, 1335830400*1000);
+        $points = array(1325376000*1000, 1328054400*1000, 1330560000*1000, 1333238400*1000, 1335830400*1000);
         //$
         switch ($type) {
             case self::generaal :
-                
+                if ($option == null){
+                    
+                    $data = array(6,7,8,9,10);
+                } else {
+
+                }
                 
                 $data = array(1,2,3,4,5);
                 break;
@@ -115,44 +119,57 @@ class IndexWriter {
                 break;
             case self::protocol :
                 if ($option == null) {
+                    $points = array("a", "b", "c", "d", "e");
+                    $data = array(4,5,6,7,8);
+                } else {
                     
-                    $data = array(0,0,0,0,0);
-                }
-                    
+                }   
                 break;
             default:
                 die("Unkown graph-type");
         }
 
-        $output["data"] = $this->dManager->getMap($datums, $data);
+        $output["data"] = $this->dManager->getMap($points, $data);
         //var_dump($output);
         return json_encode($output);
     } 
     
     public function scriptWriter(){
-        $scriptblock = 'var options = {
-                    bars: {
-                        show: true, 
-                        barWidth: 28*24*60*60*1000, 
-                        align: "center",
-                        },
-                    grid: { hoverable: true, clickable: true },
-                    yaxis: { max: 10 },
-                    xaxis: { 
-                        mode: "time",
-                        timeformat: "%b",
-                        tickSize: [1, "month"],
-                        monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
-                        }   
-                };
-                ';
+        $scriptblock = '
+        var protocolOptions = {
+            bars: {
+                show: true, 
+                barWidth: 0.9, 
+                align: "center",
+                },
+            grid: { hoverable: true, clickable: true },
+            yaxis: { max: 10 },
+        };
+        var timeOptions = {
+            bars: {
+                show: true, 
+                barWidth: 28*24*60*60*1000, 
+                align: "center",
+            },
+            lines: {show: true,},
+            grid: { hoverable: true, clickable: true, mouseActiveRadius: 50 },
+            yaxis: { max: 10 },
+            xaxis: { 
+                mode: "time",
+                timeformat: "%b",
+                tickSize: [1, "month"],
+                monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
+                }  
+        };
+        ';
         for ($i = 0; $i < count($this->jsonsets); $i++) {
             $currentHolder = $this->placeholders[$i];
+            $currentType = $this->typeOrder[$i];
             $currentSet = $this->jsonsets[$i];
             $scriptblock .= 
         '
         var data_' . $currentHolder . ' = '. $currentSet . ';
-        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '], options);
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '], ' . ($currentType == self::protocol ? "protocolOptions" : "timeOptions") . ');
 
         $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
             plot_'. $currentHolder . '.unhighlight();
@@ -187,7 +204,7 @@ class IndexWriter {
     
     public function testMap(){
        //var_dump($this->dManager->getMap($this->datasets, $this->placeholders));
-       //var_dump($this->jsonsets);
+       var_dump($this->jsonsets);
        //var_dump(json_decode($this->jsonsets[1]));
     }
 }

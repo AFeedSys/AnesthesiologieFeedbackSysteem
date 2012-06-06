@@ -13,7 +13,9 @@ class dataManager {
             $this->connection = mysql_connect($server, "aFeedSysGebruik", "gebruikertest");
         }
     }
-
+    
+    //public function
+    
     public function closeConnection(){
         mysql_close();
     }
