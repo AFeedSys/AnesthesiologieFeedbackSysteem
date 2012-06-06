@@ -9,7 +9,7 @@ $placeholders = array("topGraph", "middleGraph", "bottomGraph");
 $typeOrder = array(IndexWriter::protocol, IndexWriter::maand, IndexWriter::generaal);
 $writer = new IndexWriter($placeholders, $typeOrder);
 
-$datasets = $writer->writeDataSets(null, null);
+$datasets = $writer->writeDataFlotsets(null, null);
 ?>
 
 <html>
@@ -39,5 +39,7 @@ $datasets = $writer->writeDataSets(null, null);
     }
 });
         </script>
+        
+        <?$writer->testMap();?>
     </body>
 </html>

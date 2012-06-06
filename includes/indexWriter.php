@@ -1,19 +1,22 @@
 <?
 include 'magic.php';
+include 'managers\dataManager.php';
 
 class IndexWriter {
     const generaal = "generaal";
     const maand = "maand";
     const protocol = "protocol";
 
-    private $datasets;
+    private $jsonsets;
     private $placeholders;
     private $typeOrder;
+    private $dManager;
 
     function __construct($placeholders, $typeOrder){
         $this->isMatchedSized($placeholders, $typeOrder);
         $this->placeholders = $placeholders;
         $this->typeOrder = $typeOrder;
+        $this->dManager = new dataManager();
     }
 
     public function getPlaceholders() {
@@ -24,12 +27,12 @@ class IndexWriter {
         $this->placeholders = $value;
     }
 
-    public function getDatasets(){
-        return $this->datasets;
+    public function getJsonsets(){
+        return $this->jsonsets;
     }
 
-    public function setDatasets($value) {
-        $this->datasets = $value;
+    public function setJsonsets($value) {
+        $this->jsonsets = $value;
     }
 
     public function getTypeOrder(){
@@ -55,90 +58,104 @@ class IndexWriter {
         return $output;
     }
     
-    public function writeDataSets($otherPlaceholders, $otherTypes) {        
-        $datasets = array();
+    public function writeDataFlotsets($otherPlaceholders, $otherTypes) {        
+        $flotsets = array();
         
         $toBePlaced = null;
         $toBeTyped = null;
         // Check if input is null for custom sets
-        if(is_null($otherPlaceholders)){
-            $toBePlaced = $this->placeholders;
-        } else {
-            $toBePlaced = $otherPlaceholders;
-        }
-        if(is_null($otherTypes)){
-            $toBeTyped = $this->typeOrder;
-        } else {
-            $toBeTyped = $otherTypes;
-        }
-        //Test
-        $this->isMatchedSized($toBePlaced, $toBeTyped);
-        //WriteDatasets
-        for ($i = 0; $i<count($toBePlaced); $i++){
-            array_push($datasets, $this->writeDataset($toBeTyped[$i], $toBeTyped[$i], null));
-        }
+            if(is_null($otherPlaceholders)){
+                $toBePlaced = $this->placeholders;
+            } else {
+                $toBePlaced = $otherPlaceholders;
+            }
+            if(is_null($otherTypes)){
+                $toBeTyped = $this->typeOrder;
+            } else {
+                $toBeTyped = $otherTypes;
+            }
+        //Test of instellingen en houders evengroot zijn
+            $this->isMatchedSized($toBePlaced, $toBeTyped);
+        //Schrijf de data blokken.
+            for ($i = 0; $i<count($toBePlaced); $i++){
+                $test = $this->writeDataFlotset($toBeTyped[$i], $toBeTyped[$i], null);
+                array_push($flotsets, $test);
+            }
         
-        $this->datasets = $datasets;
-        return $datasets;
+        //Afsluiten
+        $this->jsonsets = $flotsets;
+        return $flotsets;
     } 
     
-    public function writeDataset($target, $type, $option ){
-        $label = $type;
-        $output = array($label);
-        $data = null;
+    /**
+     *
+     * @param type $target
+     * @param type $type
+     * @param type $option
+     * @return json dataset zoals flot die accepteert.
+     */
+    public function writeDataFlotset($target, $type, $option ){
+        $output = array("label" => $type);
+        $labels = array();
+        $datums = array(1325376000*1000, 1328054400*1000, 1330560000*1000, 1333238400*1000, 1335830400*1000);
+        //$
         switch ($type) {
             case self::generaal :
-                //TestData will be initial call
-                $data = array(-373597200000 => 1, -370918800000 => 2, -368326800000 => 3, -363056400000 => 4, -360378000000 => 5);
-                    //$data = '[[0,1],[1,2],[2,3],[3,4],[4,5]]';
+                
+                
+                $data = array(1,2,3,4,5);
                 break;
             case self::maand :
                 if ($option == null){
-                    //TestData will be initial call
-                    //$data = '[[0,5],[1,6],[2,7],[3,8],[4,9]]';
-                    $data = array(-373597200000 => 4,-370918800000 => 5, -368326800000 => 6,-363056400000 => 7, -360378000000 => 8);
+                    
+                    $data = array(6,7,8,9,10);
                 } else {
 
                 }
                 break;
             case self::protocol :
                 if ($option == null) {
-                    //Testdata will be intial dataset-call.
-                    $data = array(-373597200000 => 0,-370918800000 => 0, -368326800000 => 0, -363056400000 => 0, -360378000000 => 0);
-                    //$data =  '[[0,0],[1,0],[2,0],[3,0],[4,0]]';
+                    
+                    $data = array(0,0,0,0,0);
                 }
                     
                 break;
             default:
                 die("Unkown graph-type");
         }
-        array_push($output,$data);
+
+        $output["data"] = $this->dManager->getMap($datums, $data);
         //var_dump($output);
-        return json_encode($output);;
+        return json_encode($output);
     } 
     
     public function scriptWriter(){
-        $scriptblock = "";
-        for ($i = 0; $i < count($this->datasets); $i++) {
+        $scriptblock = 'var options = {
+                    bars: {
+                        show: true, 
+                        barWidth: 28*24*60*60*1000, 
+                        align: "center",
+                        },
+                    grid: { hoverable: true, clickable: true },
+                    yaxis: { max: 10 },
+                    xaxis: { 
+                        mode: "time",
+                        timeformat: "%b",
+                        tickSize: [1, "month"],
+                        monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
+                        }   
+                };
+                ';
+        for ($i = 0; $i < count($this->jsonsets); $i++) {
             $currentHolder = $this->placeholders[$i];
-            $currentType = $this->typeOrder[$i];
+            $currentSet = $this->jsonsets[$i];
             $scriptblock .= 
         '
-        var data_' . $currentHolder . ' = '. $this->datasets[$i] .';
-        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [{data: data_' . $currentHolder . ', label: "' . $currentType . '"}], {            
-                bars: {
-                    show: true, 
-                    barWidth: 0.9, 
-                    align: "center",
-                    },
-                grid: { hoverable: true, clickable: true },
-                yaxis: { max: 10 },
-                xaxis: { mode: "time" }
-            }    
-        );
+        var data_' . $currentHolder . ' = '. $currentSet . ';
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '], options);
 
-        $("#' . $this->placeholders[$i] . '").bind("plotclick", function (event, pos, item) {
-            plot_'. $this->placeholders[$i] . '.unhighlight();
+        $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
+            plot_'. $currentHolder . '.unhighlight();
             if (item) {
                 alert("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
                 plot.highlight(item.series, item.datapoint);
@@ -166,6 +183,12 @@ class IndexWriter {
             echo '<strong>Array2:</strong>';
             var_dump($array2);
         }
+    }
+    
+    public function testMap(){
+       //var_dump($this->dManager->getMap($this->datasets, $this->placeholders));
+       //var_dump($this->jsonsets);
+       //var_dump(json_decode($this->jsonsets[1]));
     }
 }
 ?>
