@@ -3,9 +3,6 @@ include 'magic.php';
 include 'managers\dataManager.php';
 
 class IndexWriter {
-    const generaal = "generaal";
-    const maand = "maand";
-    const protocol = "protocol";
 
     private $jsonsets;
     private $placeholders;
@@ -16,7 +13,7 @@ class IndexWriter {
         $this->isMatchedSized($placeholders, $typeOrder);
         $this->placeholders = $placeholders;
         $this->typeOrder = $typeOrder;
-        $this->dManager = new dataManager();
+        $this->dManager = new DataManager();
     }
 
     public function getPlaceholders() {
@@ -41,6 +38,10 @@ class IndexWriter {
 
     public function setTypeOrder($value) {
         $this->typeOrder = $value;
+    }
+    
+    public function getDManager() {
+        return $this->dManager;
     }
     
     public function writePlaceholders($otherPlaceholders) {
@@ -78,61 +79,14 @@ class IndexWriter {
             $this->isMatchedSized($toBePlaced, $toBeTyped);
         //Schrijf de data blokken.
             for ($i = 0; $i<count($toBePlaced); $i++){
-                $test = $this->writeDataFlotset($toBeTyped[$i], $toBeTyped[$i], null);
+                $test = $this->dManager->writeDataFlotset($toBeTyped[$i], null);
                 array_push($flotsets, $test);
             }
         
         //Afsluiten
         $this->jsonsets = $flotsets;
         return $flotsets;
-    } 
-    
-    /**
-     *
-     * @param type $target
-     * @param type $type
-     * @param type $option
-     * @return json dataset zoals flot die accepteert.
-     */
-    public function writeDataFlotset($target, $type, $option ){
-        $output = array("label" => $type);
-        $points = array(1325376000*1000, 1328054400*1000, 1330560000*1000, 1333238400*1000, 1335830400*1000);
-        //$
-        switch ($type) {
-            case self::generaal :
-                if ($option == null){
-                    
-                    $data = array(6,7,8,9,10);
-                } else {
-
-                }
-                
-                $data = array(1,2,3,4,5);
-                break;
-            case self::maand :
-                if ($option == null){
-                    
-                    $data = array(6,7,8,9,10);
-                } else {
-
-                }
-                break;
-            case self::protocol :
-                if ($option == null) {
-                    $points = array("a", "b", "c", "d", "e");
-                    $data = array(4,5,6,7,8);
-                } else {
-                    
-                }   
-                break;
-            default:
-                die("Unkown graph-type");
-        }
-
-        $output["data"] = $this->dManager->getMap($points, $data);
-        //var_dump($output);
-        return json_encode($output);
-    } 
+    }
     
     public function scriptWriter(){
         $scriptblock = '
@@ -169,7 +123,7 @@ class IndexWriter {
             $scriptblock .= 
         '
         var data_' . $currentHolder . ' = '. $currentSet . ';
-        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '], ' . ($currentType == self::protocol ? "protocolOptions" : "timeOptions") . ');
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::protocol ? "protocolOptions" : "timeOptions") . ');
 
         $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
             plot_'. $currentHolder . '.unhighlight();
