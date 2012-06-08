@@ -1,6 +1,7 @@
 <? 
 session_start();
-
+$_SESSION['userType'] = 'gebruiker';
+$_SESSION['login'] = 1; 
 //Control if user has logged on
 //include './includes/loginCheck.php';
 //Other requirements
@@ -8,7 +9,7 @@ require './includes/indexWriter.php';
 
 //Setting up page. CONFIG HERE
 $placeholders = array("topGraph", "middleGraph", "bottomGraph");
-$typeOrder = array(DataManager::maand, DataManager::protocol, DataManager::generaal);
+$typeOrder = array(DataManager::protocol, DataManager::maand, DataManager::generaal);
 $writer = new IndexWriter($placeholders, $typeOrder);
 
 $datasets = $writer->writeDataFlotsets(null, null);
@@ -22,6 +23,7 @@ $datasets = $writer->writeDataFlotsets(null, null);
     </head>
     
     <body>
+        <? var_dump($_SESSION['userType']); ?>
         <?= $writer->writePlaceholders(null); ?>
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">

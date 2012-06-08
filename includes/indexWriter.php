@@ -79,7 +79,7 @@ class IndexWriter {
             $this->isMatchedSized($toBePlaced, $toBeTyped);
         //Schrijf de data blokken.
             for ($i = 0; $i<count($toBePlaced); $i++){
-                $test = $this->dManager->writeDataFlotset($toBeTyped[$i], null);
+                $test = $this->dManager->getJSONset($toBeTyped[$i], null);
                 array_push($flotsets, $test);
             }
         
@@ -105,9 +105,8 @@ class IndexWriter {
                 barWidth: 28*24*60*60*1000, 
                 align: "center",
             },
-            lines: {show: true,},
             grid: { hoverable: true, clickable: true, mouseActiveRadius: 50 },
-            yaxis: { max: 10 },
+            yaxis: { max: 100 },
             xaxis: { 
                 mode: "time",
                 timeformat: "%b",
@@ -123,7 +122,7 @@ class IndexWriter {
             $scriptblock .= 
         '
         var data_' . $currentHolder . ' = '. $currentSet . ';
-        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::protocol ? "protocolOptions" : "timeOptions") . ');
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::maand ? "protocolOptions" : "timeOptions") . ');
 
         $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
             plot_'. $currentHolder . '.unhighlight();

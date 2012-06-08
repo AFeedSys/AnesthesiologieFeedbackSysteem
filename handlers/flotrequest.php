@@ -17,5 +17,5 @@
     $type = $_GET['type'];
     $option = $_GET['option'];
     
-    echo $manager->writeDataFlotset($type, $option); 
+    echo $manager->getJSONset($type, $option); 
 ?>
