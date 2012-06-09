@@ -51,13 +51,35 @@ class DataManager {
         } else {
             $result = mysql_query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->toSQLdate($option)) . " GROUP BY `naam`");
         }
+        $i = 1;
         while($row = mysql_fetch_array($result)) {
-            array_push($labels, $row['naam']);
+            array_push($labels, $i);
             array_push($data, $this->toPercentage($row['doneTotaal'], $row['shouldTotaal']));
+            $i++;
         }
         $this->closeConnection($con);
         
         return $this->getMap($labels, $data); 
+    }
+    
+    public function getLabelsMaandData(){
+        $con = $this->openConnection();
+        $labels = array();
+        $namen = array();
+        $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen`");
+        
+        $i = 1;
+        while($row = mysql_fetch_array($result)) {
+            array_push($labels, $i);
+            array_push($namen, $row['naam']);
+            $i++;
+        }
+        
+        return $this->getMap($labels, $namen);
+    }
+    
+    public function getJSONLabelMaand(){
+       return json_encode($this->getLabelsMaandData());
     }
     
     public function getGeneralData(){

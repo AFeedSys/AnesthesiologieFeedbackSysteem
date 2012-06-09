@@ -95,11 +95,13 @@ class IndexWriter {
                 show: true, 
                 barWidth: 0.9, 
                 align: "center",
-                },
-            grid: { hoverable: true, clickable: true },
-            yaxis: { max: 10 },
+            },
+            grid: { hoverable: true, clickable: true, mouseActiveRadius: 50 },
+            yaxis: { max: 100 },
+            xaxis: { ticks: ' . $this->dManager->getJSONLabelMaand() . '}  
         };
-        var timeOptions = {
+            
+        var timedOptions = {
             bars: {
                 show: true, 
                 barWidth: 28*24*60*60*1000, 
@@ -122,12 +124,12 @@ class IndexWriter {
             $scriptblock .= 
         '
         var data_' . $currentHolder . ' = '. $currentSet . ';
-        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::maand ? "protocolOptions" : "timeOptions") . ');
+        var plot_'. $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::maand ? "protocolOptions" : "timedOptions") . ');
 
         $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
             plot_'. $currentHolder . '.unhighlight();
             if (item) {
-                alert("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+                alert("You clicked point " + item.datapoint + " in " + item.series.label + ".");
                 plot.highlight(item.series, item.datapoint);
             };
         });
