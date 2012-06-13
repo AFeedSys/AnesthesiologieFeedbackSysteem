@@ -28,9 +28,9 @@ class DataManager {
         $datums = array();
         $data = array();
         if($option == null){
-            $result = mysql_query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
+            $result = mysql_query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $option . " FROM `protocoltotalen` GROUP BY `naam`");
+            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $option . " FROM `protocoltotalen` GROUP BY `datum`");
         }
         while($row = mysql_fetch_array($result)) {
             array_push($datums, $this->toJStimestamp($row['datum']));
