@@ -18,7 +18,8 @@
     <div class="header">
         <h1>
         <img class="logo" src="amc.jpeg" width="120" height="65" align="middle" title="AMC">
-        AFeedSys</h1>
+        <img class="feedsyslogo" src="Afeedsyslogo1.png" width="15%">
+        </h1>
     </div>
 
     <div class="menu"> 

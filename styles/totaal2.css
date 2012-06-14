@@ -8,13 +8,16 @@ html, body{
 .header{
  position:relative; 
  height:6%; 
- background-color:#E8F7FF; 
+ background-color:#BAE8FF; 
  width:100%;
  display:block;
  overflow:auto;
  padding-top: 0px;
- border-bottom-style: solid;
- border-bottom-width: 2px;
+ /*border-bottom-style: solid;
+ border-bottom-width: 2px;*/
+   -moz-border-radius: 15px;
+ border-radius: 15px;
+
 } 
  
 .menu{
@@ -24,6 +27,8 @@ html, body{
  position:relative; 
  background-color:#BAE8FF;
  padding-left:8px; 
+ -moz-border-radius: 15px;
+ border-radius: 15px;
  }
   
 .content1,.content2,.content3{
@@ -34,11 +39,31 @@ html, body{
  float:right;
  padding-left: 6px; 
  border-left-style: solid;
+ border-left-color: grey;
  border-left-width: 2px;
  }
  
+ .content1{
+     border-top-style: solid;
+     border-top-color:grey;
+     border-top-right-radius: 15px;
+     border-top-left-radius: 15px;
+     
+ }
+ .content3{
+     border-bottom-right-radius: 15px;
+     border-bottom-left-radius: 15px;
+     
+ }
+ 
+ 
  .container{
  background-color:#BAE8FF; 
+ border-style:solid;
+ border-width: 1px;
+ border-color: grey;
+  -moz-border-radius: 15px;
+ border-radius: 15px;
  }
  
  /* .content1{
@@ -59,7 +84,11 @@ html, body{
  overflow:auto;
  padding:10px;
  border-top-style:solid;
- border-top-width: 2px;
+ border-top-width:2px;
+ -moz-border-radius:15px;
+ border-radius:15px;
+ border-color: grey;
+ 
 } 
 
 .email{
@@ -72,7 +101,11 @@ float: left;
 padding-right: 10px;
 }
  
-
+.uitlegblokje{
+    border-style:dotted;
+    background-color:#E8F7FF;
+    visibility: hidden;
+}
  
  
 /* ******************************************************************** */ 

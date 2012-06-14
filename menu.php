@@ -21,6 +21,26 @@
 	{ 
 		action="mailto:afs@amc.uva.nl";	
 	}
+        
+        function blokje(id,flagit)
+        {
+            if (flagit=="1")
+            {
+            if (document.layers) document.layers[''+id+''].visibility = "show"
+                else if (document.all) document.all[''+id+''].style.visibility = "visible"
+                else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible"
+            }    
+            else
+                if (flagit=="0")
+                {
+                if (document.layers) document.layers[''+id+''].visibility = "hide"
+                else if (document.all) document.all[''+id+''].style.visibility = "hidden"
+                   else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden"
+                }
+        }
+    
+        
+       
 
 </script>
 
@@ -35,8 +55,10 @@
 	<p> Functie: </p>
 
 	<input type="button" onclick="show_confirm()" value="Uitloggen" />
-
-
+        
+        <br>
+        <p> <a href="#" onMouseOver="blokje('div1',1)" onMouseOut="blokje('div1',0)">Uitleg</a></p>
+        <div class="uitlegblokje" id="div1">Klik op de grafieken om feedback per maand te zien</div>
 	<!-- <input type="button" value="Mail sturen" onclick="mailto:afs@amc.uva.nl" /> -->
 
 	<p class="email">
