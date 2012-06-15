@@ -17,7 +17,7 @@
 
     <div class="header">
         <h1>
-        <img class="logo" src="amc.jpeg" width="120" height="65" align="middle" title="AMC">
+        <img class="logo" src="amc.png" width="120" height="65" align="middle" title="AMC">
         <img class="feedsyslogo" src="Afeedsyslogo1.png" width="15%">
         </h1>
     </div>
