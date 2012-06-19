@@ -2,15 +2,16 @@
 session_start();
 $_SESSION['userType'] = 'gebruiker';
 $_SESSION['login'] = 1; 
-//Control if user has logged on
-//include './includes/loginCheck.php';
-//Other requirements
-require './includes/indexWriter.php';
+
+include_once 'loaders/AutoLoader.php';
 
 //Setting up page. CONFIG HERE
-$placeholders = array("topGraph", "middleGraph", "bottomGraph");
-$typeOrder = array(DataManager::protocol, DataManager::maand, DataManager::generaal);
-$writer = new IndexWriter($placeholders, $typeOrder);
+$graphs = array();
+array_unshift($graph, new FlotGraph("Data generieke uitkomsten per Maand", DataManager::generaal, "content1", "", "Click om van geselecteerde maand de resultaten te zien", "content2"));
+array_unshift($graph, new FlotGraph("Data van de Maand", DataManager::maand, "content2", $beschrijving, "Click om van het geselecteerde protocol de trendlijn in te zien", "content3"));
+array_unshift($graph, new FlotGraph("Protocol Specifieke Data", DataManager::protocol, "content3", "", "Click om van die maand alle procotollen te zien.", "content2"));
+
+$writer = new IndexWriter($graph);
 
 $datasets = $writer->writeDataFlotsets(null, null);
 ?>
