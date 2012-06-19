@@ -1,5 +1,10 @@
 <?php
 class FlotGraph {
+    
+    const basisOption = '
+            grid: { hoverable: true, clickable: true},
+            yaxis: { max: 100 },';
+    
     public $titel;
     public $type;
     public $jsonset;
@@ -47,8 +52,8 @@ class FlotGraph {
         return '<div id="' . $toBePlaced->holder . '" class="' . $toBePlaced->holder . '></div>';
     }
     
-    private function getScriptOptions(){
-        
+    public function getScriptOptions(){
+        return basisOption;
     }
 }
 

@@ -1,6 +1,8 @@
 <?php
     require_once 'includes/FlotGraph.php';
     require_once 'includes/BarGraph.php';
+    require_once 'includes/TrendGraph.php';
+    require_once 'includes/PersonalCompareGraph.php';
     require_once 'includes/IndexWriter.php';
     require_once 'managers/DataManager.php';
     
