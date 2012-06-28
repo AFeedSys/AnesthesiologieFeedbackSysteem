@@ -4,6 +4,7 @@ class DataManager {
     const MAAND = "maand";
     const PROTOCOL_TREND = "protocol";
     
+    // <editor-fold desc="public : verkrijgen van data-arrays">
     /*
      * ******************************************
      *              Public functies
@@ -13,6 +14,11 @@ class DataManager {
      * ******************************************
      */
     
+    /**
+     * 
+     * @param String $option gegeven protocol
+     * @return array Flot-compatible array met trend van 1 protocol 
+     */
     public function getProtocolTrendData($option){
         $con = $this->openConnection();
         $result = null;
@@ -67,8 +73,9 @@ class DataManager {
         
         return $this->getMap($datums, $data); 
     }
+    // </editor-fold>
     
-    
+    // <editor-fold desc="public : JSON-sets">
     /*
      * ******************************************
      *      voor het verkrijgen van JSON-sets
@@ -103,7 +110,9 @@ class DataManager {
         //var_dump($output);
         return json_encode($output);
     } 
+    // </editor-fold>
     
+    // <editor-fold desc="public : labels">
      /*
      * ******************************************
      *  voor het verkrijgen van labels / procol-namen
@@ -134,7 +143,9 @@ class DataManager {
     public function getProtocolLabelsJSON($maand){
        return json_encode($this->getProtocolLabels($maand));
     }
+     // </editor-fold>
     
+    // <editor-fold desc="public : static">
     /*
      * ******************************************
      *      (public) Static functies
@@ -144,13 +155,15 @@ class DataManager {
     public static function getMap($labels, $amounts) {
         return array_map('make_pair', $labels, $amounts);
     }
+    // </editor-fold>
     
+    // <editor-fold desc="private : misc">    
     /*
      * ******************************************
      *            Private functies
      * ******************************************
      */
-    
+
     private function toJStimestamp($date){
         return strtotime($date) * 1000;
     }
@@ -166,7 +179,9 @@ class DataManager {
     private function toPercentage($part, $totaal){
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
     }
+    // </editor-fold>
     
+    // <editor-fold desc="private : connectiviteit">
     /*
      * ******************************************
      *         Connecitiviteit functies
@@ -191,13 +206,14 @@ class DataManager {
         mysql_select_db("afeedsys", $con);
         return $con;
     }
+    // </editor-fold>
 }
 
 /**
- *
+ * 
  * @param type $label
  * @param type $amount
- * @return type 
+ * @return array flot-compatible 
  */
 function make_pair($label, $amount) {
     return array($label, $amount);

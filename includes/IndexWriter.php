@@ -1,24 +1,23 @@
 <?
-include 'magic.php';
 
 class IndexWriter {
 
-    private $graphs;
-    private $dManager;
-
+    private $graphs; //array met graphs
+    private $dManager; //DataManager
+    
+    /**
+     * Constructor
+     * @param array $graphs met FlotGraphs or subclasses
+     */
     function __construct($graphs) {
         $this->graphs = $graphs;
         $this->dManager = new DataManager();
     }
 
-    public function getGraphs() {
-        return $this->graphs;
-    }
-
-    public function getDManager() {
-        return $this->dManager;
-    }
-
+    /**
+     * Genereert HTML-elementen voor alle opgegeven FlotGraphs.
+     * @return String/HTML 
+     */
     public function writePlaceholders() {
         $output = "";
         foreach ($graph as $this->graphs) {
@@ -26,7 +25,11 @@ class IndexWriter {
         }
         return $output;
     }
-
+    
+    /**
+     * Genereert alle benodigde javascript elementen. Deze method moet wel omgeven worden door een script-element.
+     * @return String/Javascript 
+     */
     public function writeScriptBlock() {
         $scriptblock = '';
         // options voor iedere graph

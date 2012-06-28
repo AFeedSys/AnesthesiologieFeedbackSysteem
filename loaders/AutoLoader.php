@@ -7,7 +7,7 @@
     
     // MOGELIJK: Datamanager
     require_once 'includes/FlotGraph.php'; //SuperClass + DataManagers
-    require_once 'includes/BarGraph.php'; //DataManager
+    require_once 'includes/ProtocolOverviewGraph.php'; //DataManager
     require_once 'includes/TrendGraph.php';
     
     // DataManger + FlotGraphs

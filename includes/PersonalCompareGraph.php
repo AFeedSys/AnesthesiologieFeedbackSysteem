@@ -11,7 +11,7 @@
  * @author Coen
  */
 class PersonalCompareGraph extends FlotGraph {
-    //put your code here
+    
     function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder) {
         parent::__construct($titel, $type, null, $holder, $beschrijving, $tooltip, $updatesHolder);
     }
