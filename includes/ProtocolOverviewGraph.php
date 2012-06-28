@@ -11,13 +11,10 @@
  * @author Coen
  */
 class ProtocolOverviewGraph extends FlotGraph {
-    
-    private $dManager = null;
 
     //put your code here    
     function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder) {
-        parent::__construct($titel, $type, null, $holder, $beschrijving, $tooltip, $updatesHolder);
-        $this->$dManager = new DataManager();
+        parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder);
     }
     
     public function getOptionScript() {
@@ -29,7 +26,7 @@ class ProtocolOverviewGraph extends FlotGraph {
             align: "center",
         },
         xaxis: { 
-            ticks: ' . $this->dManager->getProtocolLabelsJSON(null) . ',
+            ticks: ' . $this->getDManager()->getProtocolLabelsJSON(null) . ',
         }, 
         ' . self::BASIS_OPTIES . '
     };';

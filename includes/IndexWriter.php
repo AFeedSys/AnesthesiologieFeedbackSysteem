@@ -47,9 +47,6 @@ class IndexWriter {
     }
 
     public function testMap() {
-        //var_dump($this->dManager->getMap($this->datasets, $this->placeholders));
-        var_dump($this->jsonsets);
-        //var_dump(json_decode($this->jsonsets[1]));
     }
 }
 

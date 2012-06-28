@@ -13,7 +13,7 @@
 class TrendGraph extends FlotGraph {
 
     function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder) {
-        parent::__construct($titel, $type, null, $holder, $beschrijving, $tooltip, $updatesHolder);
+        parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder);
     }
     
     public function getOptionScript() {

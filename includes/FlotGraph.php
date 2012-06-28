@@ -169,7 +169,11 @@ class FlotGraph {
     public function setUpdatesHolder($updatesHolder) {
         $this->updatesHolder = $updatesHolder;
     }
-    // </editor-fold>
+    
+    public function getDManager() {
+        return $this->dManager;
+    }
+        // </editor-fold>
     
 }
 
