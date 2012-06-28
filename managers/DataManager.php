@@ -1,28 +1,19 @@
 <?php
 class DataManager {
-    const generaal = "generaal";
-    const maand = "maand";
-    const protocol = "protocol";
+    const JAAR_TREND = "generaal";
+    const MAAND = "maand";
+    const PROTOCOL_TREND = "protocol";
     
-    private function openConnection(){
-        include 'includes/loginCheck.php';
-        $server = "localhost:3306";
-        $con = null;
-        if($_SESSION['userType'] == "admin") {
-             $con = mysql_connect($server, "aFeedSysAdmin", "admintest");
-        } else {
-            $con = mysql_connect($server, "aFeedSysGebruik", "gebruikertest");
-        }
-        if (!$con){
-            die('Could not connect: ' . mysql_error());
-        }
-        mysql_select_db("afeedsys", $con);
-        return $con;
-    }
+    /*
+     * ******************************************
+     *              Public functies
+     * ******************************************
+     * ******************************************
+     *     voor het verkrijgen van data-arrays
+     * ******************************************
+     */
     
-    //public function
-    
-    public function getProtocolData($option){
+    public function getProtocolTrendData($option){
         $con = $this->openConnection();
         $result = null;
         $datums = array();
@@ -30,7 +21,7 @@ class DataManager {
         if($option == null){
             $result = mysql_query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $option . " FROM `protocoltotalen` GROUP BY `datum`");
+            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $option . " FROM `protocoltotalen`");
         }
         while($row = mysql_fetch_array($result)) {
             array_push($datums, $this->toJStimestamp($row['datum']));
@@ -40,7 +31,7 @@ class DataManager {
         return $this->getMap($datums, $data);
     }
     
-    public function getMaandData($option){
+    public function getProtocollenMaandData($option){
         $con = $this->openConnection();
         $result = null;
         $labels = array();
@@ -62,27 +53,7 @@ class DataManager {
         return $this->getMap($labels, $data); 
     }
     
-    public function getLabelsMaandData(){
-        $con = $this->openConnection();
-        $labels = array();
-        $namen = array();
-        $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen`");
-        
-        $i = 1;
-        while($row = mysql_fetch_array($result)) {
-            array_push($labels, $i);
-            array_push($namen, $row['naam']);
-            $i++;
-        }
-        
-        return $this->getMap($labels, $namen);
-    }
-    
-    public function getJSONLabelMaand(){
-       return json_encode($this->getLabelsMaandData());
-    }
-    
-    public function getGeneralData(){
+    public function getJaarTrendData(){
         $con = $this->openConnection();
         $result = mysql_query("SELECT * FROM `maandtotalen`");
         $datums = array();
@@ -96,6 +67,89 @@ class DataManager {
         
         return $this->getMap($datums, $data); 
     }
+    
+    
+    /*
+     * ******************************************
+     *      voor het verkrijgen van JSON-sets
+     * ******************************************
+     */
+    
+    /**
+     *
+     * @param type $target
+     * @param type $type
+     * @param type $option
+     * @return json dataset zoals flot die accepteert.
+     */
+    public function getJSONset($type, $option){
+        $output = array("label" => $type);
+        
+        switch ($type) {
+            case self::JAAR_TREND :
+                $data = $this->getJaarTrendData();
+                break;
+            case self::MAAND :
+                $output["label"] = ($option == null ? "" : $this->toUIdate($type));
+                $data = $this->getProtocollenMaandData($option);
+                break;
+            case self::PROTOCOL_TREND :
+                $data = $this->getProtocolTrendData($option);
+                break;
+            default:
+                die("Unkown graph-type");
+        }
+        $output['data'] = $data;
+        //var_dump($output);
+        return json_encode($output);
+    } 
+    
+     /*
+     * ******************************************
+     *  voor het verkrijgen van labels / procol-namen
+     * ******************************************
+     */  
+    
+    public function getProtocolLabels($maand){
+        $con = $this->openConnection();
+        $labels = array();
+        $namen = array();
+        
+        if($option == null){
+            $result = mysql_query("SELECT DISTINCT `naam`, MAX(`datum`) FROM `protocoltotalen` GROUP BY `datum`");
+        } else {
+            $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->toSQLdate($maand) );
+        }
+        
+        $i = 1;
+        while($row = mysql_fetch_array($result)) {
+            array_push($labels, $i);
+            array_push($namen, $row['naam']);
+            $i++;
+        }
+        
+        return $this->getMap($labels, $namen);
+    }
+    
+    public function getProtocolLabelsJSON($maand){
+       return json_encode($this->getProtocolLabels($maand));
+    }
+    
+    /*
+     * ******************************************
+     *      (public) Static functies
+     * ******************************************
+     */  
+    
+    public static function getMap($labels, $amounts) {
+        return array_map('make_pair', $labels, $amounts);
+    }
+    
+    /*
+     * ******************************************
+     *            Private functies
+     * ******************************************
+     */
     
     private function toJStimestamp($date){
         return strtotime($date) * 1000;
@@ -113,45 +167,38 @@ class DataManager {
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
     }
     
-    public function closeConnection($con){
+    /*
+     * ******************************************
+     *         Connecitiviteit functies
+     * ******************************************
+     */
+    private function closeConnection($con){
         mysql_close($con);
     }
     
-    /**
-     *
-     * @param type $target
-     * @param type $type
-     * @param type $option
-     * @return json dataset zoals flot die accepteert.
-     */
-    public function getJSONset($type, $option){
-        $output = array("label" => $type);
-        $points = array(1325376000*1000, 1328054400*1000, 1330560000*1000, 1333238400*1000, 1335830400*1000);
-        //$
-        switch ($type) {
-            case self::generaal :
-                $data = $this->getGeneralData();
-                break;
-            case self::maand :
-                $output["label"] = ($option == null ? "" : $this->toUIdate($type));
-                $data = $this->getMaandData($option);
-                break;
-            case self::protocol :
-                $data = $this->getProtocolData($option);
-                break;
-            default:
-                die("Unkown graph-type");
+    private function openConnection(){
+        include 'includes/loginCheck.php';
+        $server = "localhost:3306";
+        $con = null;
+        if($_SESSION['userType'] == "admin") {
+             $con = mysql_connect($server, "aFeedSysAdmin", "admintest");
+        } else {
+            $con = mysql_connect($server, "aFeedSysGebruik", "gebruikertest");
         }
-        $output['data'] = $data;
-        //var_dump($output);
-        return json_encode($output);
-    } 
-    
-    public function getMap($labels, $amounts) {
-        return array_map('make_pair', $labels, $amounts);
+        if (!$con){
+            die('Could not connect: ' . mysql_error());
+        }
+        mysql_select_db("afeedsys", $con);
+        return $con;
     }
 }
 
+/**
+ *
+ * @param type $label
+ * @param type $amount
+ * @return type 
+ */
 function make_pair($label, $amount) {
     return array($label, $amount);
 }

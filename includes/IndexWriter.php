@@ -21,68 +21,25 @@ class IndexWriter {
 
     public function writePlaceholders() {
         $output = "";
-        foreach ($toBePlaced as $this->graphs) {
-            $output .= $toBePlaced->getHolderHTML();
+        foreach ($graph as $this->graphs) {
+            $output .= $graph->getHolderHTML();
         }
         return $output;
     }
 
-    public function writeDataFlotsets() {
-        //Schrijf de data blokken.
-        foreach ($graph as $this->graphs) {
-            $test = $this->dManager->getJSONset($graph->type, null);
-            $graph->jsonset = $test;
+    public function writeScriptBlock() {
+        $scriptblock = '';
+        // options voor iedere graph
+        foreach ($graph as $this->graphs){
+            $scriptblock .= $graph->getOptionScript();
         }
-    }
-
-    public function scriptWriter() {
-        $scriptblock = '
-        var protocolOptions = {
-            bars: {
-                show: true, 
-                barWidth: 0.9, 
-                align: "center",
-            },
-            grid: { hoverable: true, clickable: true, mouseActiveRadius: 50 },
-            yaxis: { max: 100 },
-            xaxis: { ticks: ' . $this->dManager->getJSONLabelMaand() . '}  
-        };
-            
-        var timedOptions = {
-            bars: {
-                show: true, 
-                barWidth: 28*24*60*60*1000, 
-                align: "center",
-            },
-            grid: { hoverable: true, clickable: true, mouseActiveRadius: 50 },
-            yaxis: { max: 100 },
-            xaxis: { 
-                mode: "time",
-                timeformat: "%b",
-                tickSize: [1, "month"],
-                monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
-                }  
-        };
-        ';
-        for ($i = 0; $i < count($this->jsonsets); $i++) {
-            $currentHolder = $this->placeholders[$i];
-            $currentType = $this->typeOrder[$i];
-            $currentSet = $this->jsonsets[$i];
-            $scriptblock .=
-                    '
-        var data_' . $currentHolder . ' = ' . $currentSet . ';
-        var plot_' . $currentHolder . ' = $.plot($("#' . $currentHolder . '"), [' . $currentSet . '],' . ($currentType == DataManager::maand ? "protocolOptions" : "timedOptions") . ');
-
-        $("#' . $currentHolder . '").bind("plotclick", function (event, pos, item) {
-            plot_' . $currentHolder . '.unhighlight();
-            if (item) {
-                alert("You clicked point " + item.datapoint + " in " + item.series.label + ".");
-                plot.highlight(item.series, item.datapoint);
-            };
-        });
-        ';
+        // plots & keybinds (AJAX)
+        foreach ($graph as $this->graphs){
+            $scriptblock .= $graph->getDataScript();
+            $scriptblock .= $graph->getPlotScript();
+            $scriptblock .= $graph->getBindScript();
         }
-
+        
         return $scriptblock;
     }
 

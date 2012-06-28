@@ -10,8 +10,32 @@
  *
  * @author Coen
  */
-class TrendGraph {
+class TrendGraph extends FlotGraph {
+
     //put your code here
+    function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder) {
+        parent::__construct($titel, $type, null, $holder, $beschrijving, $tooltip, $updatesHolder);
+    }
+    
+    public function getOptionScript() {
+        return '
+    var ' . self::OPTION_PREFIX . $this->titel . ' = {
+        lines: {
+            show: true, 
+        },
+        points: {
+            show: true,
+        },
+        xaxis: { 
+            mode: "time",
+            timeformat: "%b",
+            tickSize: [1, "month"],
+            monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
+        },
+        ' . self::BASIS_OPTIES . '
+    };';
+    }
+
 }
 
 ?>

@@ -1,23 +1,17 @@
 <?php
-    require_once 'includes/FlotGraph.php';
-    require_once 'includes/BarGraph.php';
-    require_once 'includes/TrendGraph.php';
-    require_once 'includes/PersonalCompareGraph.php';
-    require_once 'includes/IndexWriter.php';
+/**
+ * Alle includes op een rij in juiste volgorede van dependency.
+ */
+    // Geen dependency
     require_once 'managers/DataManager.php';
     
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    // MOGELIJK: Datamanager
+    require_once 'includes/FlotGraph.php'; //SuperClass + DataManagers
+    require_once 'includes/BarGraph.php'; //DataManager
+    require_once 'includes/TrendGraph.php';
+    
+    // DataManger + FlotGraphs
+    require_once 'includes/IndexWriter.php';
 
-/**
- * Description of MyAutoLoader
- * TOBE IMPLEMTNED
- * @author Coen
- */
-class AutoLoader {
-    //put your code here
-}
 
 ?>
