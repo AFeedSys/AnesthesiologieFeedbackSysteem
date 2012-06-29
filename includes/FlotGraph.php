@@ -2,8 +2,14 @@
 class FlotGraph {
     // <editor-fold desc="constants (public statics)">
     const BASIS_OPTIES = '
-        grid: { hoverable: true, clickable: true},
-        yaxis: { max: 100 },';
+        grid: {
+            hoverable: true, 
+            clickable: true
+        },
+        yaxis: {
+            min: 0,
+            max: 100,
+        },';
     
     const PLOT_PREFIX = 'plot_';
     const DATA_PREFIX = 'data_';
@@ -49,7 +55,7 @@ class FlotGraph {
      * @return String div-element van grafiek
      */
     public function getHolderHTML(){
-        return '<div id="' . $this->holder . '" class="' . $this->holder . '></div>';
+        return '<div id="' . $this->holder . '" class="' . $this->holder . '"></div>';
     }
     
     /**
@@ -61,7 +67,7 @@ class FlotGraph {
      */
     public function getOptionScript(){
         return '
-    var ' . self::OPTION_PREFIX . $this->holder . ' = {' . self::BASIS_OPTIES . '};';
+    var ' . $this->getJSVarNaam(self::OPTION_PREFIX) . ' = {' . self::BASIS_OPTIES . '};';
     }
     
     /**
@@ -75,7 +81,7 @@ class FlotGraph {
     public function getDataScript(){
         $this->jsonset = $this->dManager->getJSONset($this->type, null);
         return '
-    var ' . self::DATA_PREFIX . $this->holder . ' = '. $this->jsonset .';';
+    var ' . $this->getJSVarNaam(self::DATA_PREFIX) . ' = '. $this->jsonset .';';
     }
     
     /**
@@ -87,7 +93,7 @@ class FlotGraph {
      */
     public function getPlotScript(){
         return '
-    var ' . self::PLOT_PREFIX . $this->holder . ' = $.plot($("#' . $this->holder . '"), ' . self::DATA_PREFIX . $this->title . ',' . self::OPTION_PREFIX . $this->title . ');';
+    var ' . $this->getJSVarNaam(self::PLOT_PREFIX) . ' = $.plot($("#' . $this->holder . '"), [' . $this->getJSVarNaam(self::DATA_PREFIX) . '], ' . $this->getJSVarNaam(self::OPTION_PREFIX) . ');';
     }
     
     /**
@@ -97,13 +103,21 @@ class FlotGraph {
     public function getBindScript(){
         return '
     $("#' . $this->holder . '").bind("plotclick", function (event, pos, item) {
-        plot_' . $this->holder . '.unhighlight();
         if (item) {
-            alert("You clicked point " + item.datapoint + " in " + item.series.label + ".");
-            plot.highlight(item.series, item.datapoint);
+            '. $this->getJSVarNaam(self::PLOT_PREFIX) . '.unhighlight();
+            '. $this->getJSVarNaam(self::PLOT_PREFIX) . '.highlight(item.series, item.datapoint);
         };
     });
     ';
+    }
+    
+    /**
+     * Genereert de variabele-adres naar aanleiding van een gegeven prefix.
+     * @param DataManager::const $prefix
+     * @return String 
+     */
+    public function getJSVarNaam($prefix){
+        return $prefix . $this->holder;
     }
     
     // <editor-fold desc="Auto-generated code">

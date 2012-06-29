@@ -19,17 +19,21 @@ class ProtocolOverviewGraph extends FlotGraph {
     
     public function getOptionScript() {
         return '
-    var ' . self::OPTION_PREFIX . $this->titel . ' = {
+    var ' . parent::getJSVarNaam(self::OPTION_PREFIX) . ' = {
         bars: {
             show: true,
             width: 0.9,
             align: "center",
         },
         xaxis: { 
-            ticks: ' . $this->getDManager()->getProtocolLabelsJSON(null) . ',
+            ticks: ' . parent::getDManager()->getProtocolLabelsJSON(null) . ',
         }, 
         ' . self::BASIS_OPTIES . '
     };';
+    }
+    
+    public function invoke(){
+        
     }
 }
 

@@ -4,6 +4,8 @@ class DataManager {
     const MAAND = "maand";
     const PROTOCOL_TREND = "protocol";
     
+    private $labelUpdate;
+    
     // <editor-fold desc="public : verkrijgen van data-arrays">
     /*
      * ******************************************
@@ -16,18 +18,18 @@ class DataManager {
     
     /**
      * 
-     * @param String $option gegeven protocol
+     * @param String $protcolNaam gegeven protocol
      * @return array Flot-compatible array met trend van 1 protocol 
      */
-    public function getProtocolTrendData($option){
+    public function getProtocolTrendData($protcolNaam){
         $con = $this->openConnection();
         $result = null;
         $datums = array();
         $data = array();
-        if($option == null){
+        if($protcolNaam == null){
             $result = mysql_query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $option . " FROM `protocoltotalen`");
+            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protcolNaam . " FROM `protocoltotalen`");
         }
         while($row = mysql_fetch_array($result)) {
             array_push($datums, $this->toJStimestamp($row['datum']));
@@ -37,16 +39,16 @@ class DataManager {
         return $this->getMap($datums, $data);
     }
     
-    public function getProtocollenMaandData($option){
+    public function getProtocollenMaandData($maand){
         $con = $this->openConnection();
         $result = null;
         $labels = array();
         $data = array();
         
-        if($option == null){
+        if($maand == null){
             $result = mysql_query("SELECT `naam`, MAX(`datum`), `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
         } else {
-            $result = mysql_query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->toSQLdate($option)) . " GROUP BY `naam`");
+            $result = mysql_query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->toSQLdate($maand)) . " GROUP BY `naam`");
         }
         $i = 1;
         while($row = mysql_fetch_array($result)) {
@@ -89,15 +91,12 @@ class DataManager {
      * @param type $option
      * @return json dataset zoals flot die accepteert.
      */
-    public function getJSONset($type, $option){
-        $output = array("label" => $type);
-        
+    public function getJSONset($type, $option){        
         switch ($type) {
             case self::JAAR_TREND :
                 $data = $this->getJaarTrendData();
                 break;
             case self::MAAND :
-                $output["label"] = ($option == null ? "" : $this->toUIdate($type));
                 $data = $this->getProtocollenMaandData($option);
                 break;
             case self::PROTOCOL_TREND :
@@ -106,6 +105,7 @@ class DataManager {
             default:
                 die("Unkown graph-type");
         }
+        $output = array("label" => $type);
         $output['data'] = $data;
         //var_dump($output);
         return json_encode($output);
@@ -124,7 +124,7 @@ class DataManager {
         $labels = array();
         $namen = array();
         
-        if($option == null){
+        if($maand == null){
             $result = mysql_query("SELECT DISTINCT `naam`, MAX(`datum`) FROM `protocoltotalen` GROUP BY `datum`");
         } else {
             $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->toSQLdate($maand) );
@@ -178,6 +178,12 @@ class DataManager {
     
     private function toPercentage($part, $totaal){
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
+    }
+    
+    private function getLabelUpdate(){
+        $temp = $this->labelUpdate;
+        $this->labelUpdate = null;
+        return $temp == null ? '' : $temp;
     }
     // </editor-fold>
     

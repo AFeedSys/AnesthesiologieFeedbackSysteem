@@ -20,7 +20,7 @@ class IndexWriter {
      */
     public function writePlaceholders() {
         $output = "";
-        foreach ($graph as $this->graphs) {
+        foreach ( $this->graphs as $graph ) {
             $output .= $graph->getHolderHTML();
         }
         return $output;
@@ -33,11 +33,11 @@ class IndexWriter {
     public function writeScriptBlock() {
         $scriptblock = '';
         // options voor iedere graph
-        foreach ($graph as $this->graphs){
+        foreach ($this->graphs as $graph){
             $scriptblock .= $graph->getOptionScript();
         }
         // plots & keybinds (AJAX)
-        foreach ($graph as $this->graphs){
+        foreach ($this->graphs as $graph){
             $scriptblock .= $graph->getDataScript();
             $scriptblock .= $graph->getPlotScript();
             $scriptblock .= $graph->getBindScript();

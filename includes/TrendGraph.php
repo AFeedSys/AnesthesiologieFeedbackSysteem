@@ -18,7 +18,7 @@ class TrendGraph extends FlotGraph {
     
     public function getOptionScript() {
         return '
-    var ' . self::OPTION_PREFIX . $this->titel . ' = {
+    var ' . parent::getJSVarNaam(self::OPTION_PREFIX) . ' = {
         lines: {
             show: true, 
         },
