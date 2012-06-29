@@ -58,6 +58,7 @@ $writer = new IndexWriter($graphs);
     <body>
         <? var_dump($_SESSION['userType']); ?>
         <?= $writer->writePlaceholders(null); ?>
+        <?= $result->mysqli_fetch_array() ?>
         
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">

@@ -27,15 +27,18 @@ class DataManager {
         $datums = array();
         $data = array();
         if($protcolNaam == null){
-            $result = mysql_query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
+            $result = $con->query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = mysql_query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protcolNaam . " FROM `protocoltotalen`");
+            $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protcolNaam . " FROM `protocoltotalen`");
         }
-        while($row = mysql_fetch_array($result)) {
-            array_push($datums, $this->toJStimestamp($row['datum']));
+        while($row = $result->mysqli_fetch_array()) {
+            array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['doneTotaal'], $row['shouldTotaal']));
         }
         $this->closeConnection($con);
+        
+        $this->labelUpdate = $protocolNaam;
+        
         return $this->getMap($datums, $data);
     }
     
@@ -46,14 +49,20 @@ class DataManager {
         $data = array();
         
         if($maand == null){
-            $result = mysql_query("SELECT `naam`, MAX(`datum`), `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, MAX(`datum`), `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
+            $this->labelUpdate = $this->JStoUIdate();
         } else {
-            $result = mysql_query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->toSQLdate($maand)) . " GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->JStoSQLdate($maand)) . " GROUP BY `naam`");
+            $this->labelUpdate = $this->JStoUIdate($maand);
         }
         $i = 1;
-        while($row = mysql_fetch_array($result)) {
+        var_dump($i . $result);
+        
+        while($row = $result->mysqli_fetch_array(MYSQLI_ASSOC)) {
             array_push($labels, $i);
-            array_push($data, $this->toPercentage($row['doneTotaal'], $row['shouldTotaal']));
+            $done = $row['doneTotaal'];
+            $should = $row['shouldTotaal'];
+            array_push($data, $this->toPercentage($done, $should));
             $i++;
         }
         $this->closeConnection($con);
@@ -63,12 +72,12 @@ class DataManager {
     
     public function getJaarTrendData(){
         $con = $this->openConnection();
-        $result = mysql_query("SELECT * FROM `maandtotalen`");
+        $result = $con->query("SELECT * FROM `maandtotalen`");
         $datums = array();
         $data = array();
         
-        while($row = mysql_fetch_array($result)) {
-            array_push($datums, $this->toJStimestamp($row['datum']));
+        while($row = $result->mysqli_fetch_array()) {
+            array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['maandDoneTotaal'], $row['maandShouldTot']));
         }
         $this->closeConnection($con);
@@ -127,7 +136,7 @@ class DataManager {
         if($maand == null){
             $result = mysql_query("SELECT DISTINCT `naam`, MAX(`datum`) FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->toSQLdate($maand) );
+            $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->JStoSQLdate($maand) );
         }
         
         $i = 1;
@@ -164,15 +173,19 @@ class DataManager {
      * ******************************************
      */
 
-    private function toJStimestamp($date){
+    private function SQLtoJStimestamp($date){
         return strtotime($date) * 1000;
     }
     
-    private function toSQLdate($stamp){
+    private function SQLtoUIdate($date){
+        return date('M-Y', $date);
+    }
+    
+    private function JStoSQLdate($stamp){
         return date('Y-m-d',$stamp / 1000);
     }
     
-    private function toUIdate($stamp) {
+    private function JStoUIdate($stamp) {
         return date('M-Y', $stamp / 1000);
     }
     
@@ -194,7 +207,7 @@ class DataManager {
      * ******************************************
      */
     private function closeConnection($con){
-        mysql_close($con);
+        $con->close();
     }
     
     private function openConnection(){
@@ -202,14 +215,16 @@ class DataManager {
         $server = "localhost:3306";
         $con = null;
         if($_SESSION['userType'] == "admin") {
-             $con = mysql_connect($server, "aFeedSysAdmin", "admintest");
+             $con = new mysqli($server, "aFeedSysAdmin", "admintest");
         } else {
-            $con = mysql_connect($server, "aFeedSysGebruik", "gebruikertest");
+            $con = new mysqli($server, "aFeedSysGebruik", "gebruikertest");
         }
-        if (!$con){
-            die('Could not connect: ' . mysql_error());
+        
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
-        mysql_select_db("afeedsys", $con);
+        
+        $con->select_db("afeedsys");
         return $con;
     }
     // </editor-fold>
