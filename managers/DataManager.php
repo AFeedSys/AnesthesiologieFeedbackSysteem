@@ -23,7 +23,7 @@ class DataManager {
      */
     public function getProtocolTrendData($protcolNaam){
         $con = $this->openConnection();
-        $result = null;
+        $result = $result = new mysqli_result();
         $datums = array();
         $data = array();
         if($protcolNaam == null){
@@ -35,6 +35,7 @@ class DataManager {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['doneTotaal'], $row['shouldTotaal']));
         }
+        $result->close();
         $this->closeConnection($con);
         
         $this->labelUpdate = $protocolNaam;
@@ -44,16 +45,14 @@ class DataManager {
     
     public function getProtocollenMaandData($maand){
         $con = $this->openConnection();
-        $result = null;
+        $result = new mysqli_result();
         $labels = array();
         $data = array();
         
         if($maand == null){
             $result = $con->query("SELECT `naam`, MAX(`datum`), `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
-            $this->labelUpdate = $this->JStoUIdate();
         } else {
             $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->JStoSQLdate($maand)) . " GROUP BY `naam`");
-            $this->labelUpdate = $this->JStoUIdate($maand);
         }
         $i = 1;
         
@@ -64,6 +63,7 @@ class DataManager {
             array_push($data, $this->toPercentage($done, $should));
             $i++;
         }
+        $result->close();
         $this->closeConnection($con);
         
         return $this->getMap($labels, $data); 
@@ -79,6 +79,7 @@ class DataManager {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['maandDoneTotaal'], $row['maandShouldTot']));
         }
+        $result->close();
         $this->closeConnection($con);
         
         return $this->getMap($datums, $data); 
