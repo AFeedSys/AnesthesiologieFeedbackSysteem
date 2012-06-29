@@ -18,18 +18,18 @@ class DataManager {
     
     /**
      * 
-     * @param String $protcolNaam gegeven protocol
+     * @param String $protocolNaam gegeven protocol
      * @return array Flot-compatible array met trend van 1 protocol 
      */
-    public function getProtocolTrendData($protcolNaam){
+    public function getProtocolTrendData($protocolNaam){
         $con = $this->openConnection();
-        $result = $result = new mysqli_result();
+        $result = null;
         $datums = array();
         $data = array();
-        if($protcolNaam == null){
+        if(is_null($protocolNaam)){
             $result = $con->query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protcolNaam . " FROM `protocoltotalen`");
+            $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protocolNaam . " FROM `protocoltotalen`");
         }
         while($row = $result->fetch_array()) {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
@@ -38,19 +38,19 @@ class DataManager {
         $result->close();
         $this->closeConnection($con);
         
-        $this->labelUpdate = $protocolNaam;
+        //$this->labelUpdate = $protocolNaam;
         
         return $this->getMap($datums, $data);
     }
     
     public function getProtocollenMaandData($maand){
         $con = $this->openConnection();
-        $result = new mysqli_result();
+        $result = null;
         $labels = array();
         $data = array();
         
-        if($maand == null){
-            $result = $con->query("SELECT `naam`, MAX(`datum`), `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `naam`");
+        if(is_null($maand)){
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam`");
         } else {
             $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = " . ($this->JStoSQLdate($maand)) . " GROUP BY `naam`");
         }
@@ -130,17 +130,18 @@ class DataManager {
     
     public function getProtocolLabels($maand){
         $con = $this->openConnection();
+        $result = null;
         $labels = array();
         $namen = array();
         
-        if($maand == null){
-            $result = mysql_query("SELECT DISTINCT `naam`, MAX(`datum`) FROM `protocoltotalen` GROUP BY `datum`");
+        if(is_null($maand)){
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`)");
         } else {
-            $result = mysql_query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->JStoSQLdate($maand) );
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->JStoSQLdate($maand) );
         }
         
         $i = 1;
-        while($row = mysql_fetch_array($result)) {
+        while($row = $result->fetch_array()) {
             array_push($labels, $i);
             array_push($namen, $row['naam']);
             $i++;
@@ -214,17 +215,19 @@ class DataManager {
         include 'includes/loginCheck.php';
         $server = "localhost:3306";
         $con = null;
-        if($_SESSION['userType'] == "admin") {
-             $con = new mysqli($server, "aFeedSysAdmin", "admintest");
+        if(is_null($con)) {
+            if($_SESSION['userType'] == "admin") {
+                $con = new mysqli($server, "aFeedSysAdmin", "admintest", "afeedsys");
+            } else {
+                $con = new mysqli($server, "aFeedSysGebruik", "gebruikertest", "afeedsys");
+            }
+            if ($con->connect_errno) {
+                echo "Failed to connect to MySQL: (" . $con->connect_errno . ") " . $con->connect_error;
+            }
         } else {
-            $con = new mysqli($server, "aFeedSysGebruik", "gebruikertest");
+            die('connectie was niet null');
         }
         
-        if ($mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
-        
-        $con->select_db("afeedsys");
         return $con;
     }
     // </editor-fold>

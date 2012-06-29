@@ -31,10 +31,6 @@ class ProtocolOverviewGraph extends FlotGraph {
         ' . self::BASIS_OPTIES . '
     };';
     }
-    
-    public function invoke(){
-        
-    }
 }
 
 ?>
