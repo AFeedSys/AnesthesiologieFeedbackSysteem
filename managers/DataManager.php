@@ -31,7 +31,7 @@ class DataManager {
         } else {
             $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protcolNaam . " FROM `protocoltotalen`");
         }
-        while($row = $result->mysqli_fetch_array()) {
+        while($row = $result->fetch_array()) {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['doneTotaal'], $row['shouldTotaal']));
         }
@@ -56,9 +56,8 @@ class DataManager {
             $this->labelUpdate = $this->JStoUIdate($maand);
         }
         $i = 1;
-        var_dump($i . $result);
         
-        while($row = $result->mysqli_fetch_array(MYSQLI_ASSOC)) {
+        while($row = $result->fetch_array(MYSQLI_ASSOC)) {
             array_push($labels, $i);
             $done = $row['doneTotaal'];
             $should = $row['shouldTotaal'];
@@ -76,7 +75,7 @@ class DataManager {
         $datums = array();
         $data = array();
         
-        while($row = $result->mysqli_fetch_array()) {
+        while($row = $result->fetch_array(MYSQLI_ASSOC)) {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
             array_push($data, $this->toPercentage($row['maandDoneTotaal'], $row['maandShouldTot']));
         }
