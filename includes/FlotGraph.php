@@ -110,6 +110,8 @@ class FlotGraph {
         
         $varName = $this->getJSVarNaam(self::AJAX_PREFIX);
         $updatePlot = self::PLOT_PREFIX . $this->updatesHolder;
+        $updateSet = self::DATA_PREFIX . $this->updatesHolder;
+        $updateOption = self::OPTION_PREFIX . $this->updatesHolder;
         return '
     var ' . $varName . ' = null;
     $("#' . $this->holder . '").bind("plotclick", function (event, pos, item) {
@@ -128,14 +130,16 @@ class FlotGraph {
             // Extract value om verder te gebruiken.
             var clickValue = item.datapoint[0];
             '. $before . '
+                alert(clickValue);
             // Invoke Ajax
             ' . $varName . ' = $.ajax({
                 url: "' . self::URL . '",
+                dataType: "json",
                 success: function ( response ) {
-                    alert(response);
-                    ' . $updatePlot . '.setData("[" + response + "]");
-                    ' . $updatePlot . '.setupGrid();
-                    ' . $updatePlot . '.draw();
+                    alert( response );
+                    ' . $updateSet . '= [];
+                    ' . $updateSet . '.push( response );
+                    ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '"), ' . $updateSet . ', ' . $updateOption . ');    
                 },
                 method: "GET",
                 data: {

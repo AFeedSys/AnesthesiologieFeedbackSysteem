@@ -30,7 +30,7 @@ class ProtocolOverviewGraph extends FlotGraph {
     public function getBindScript($before='', $after='') {
         
         $before .= '
-                clickValue = (' . parent::getJSVarNaam(self::OPTION_PREFIX) . '.xaxis.ticks[1])[1];
+                clickValue = (' . parent::getJSVarNaam(self::OPTION_PREFIX) . '.xaxis.ticks[clickValue-1])[1];
             ';
         
         return parent::getBindScript($before);
