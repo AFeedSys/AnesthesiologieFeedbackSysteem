@@ -106,7 +106,7 @@ class FlotGraph {
      * Genereert javaScript voor het gebruik het klikken van een plot en de interactie tussen plots.
      * @return String/JavaScript 
      */
-    public function getBindScript($before='', $after=''){
+    public function getBindScript($before='', $in='', $after=''){
         
         $varName = $this->getJSVarNaam(self::AJAX_PREFIX);
         $updatePlot = self::PLOT_PREFIX . $this->updatesHolder;
@@ -130,17 +130,10 @@ class FlotGraph {
             // Extract value om verder te gebruiken.
             var clickValue = item.datapoint[0];
             '. $before . '
-                alert(clickValue);
             // Invoke Ajax
             ' . $varName . ' = $.ajax({
                 url: "' . self::URL . '",
                 dataType: "json",
-                success: function ( response ) {
-                    alert( response );
-                    ' . $updateSet . '= [];
-                    ' . $updateSet . '.push( response );
-                    ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '"), ' . $updateSet . ', ' . $updateOption . ');    
-                },
                 method: "GET",
                 data: {
                   target : "' . $this->updateType . '",
@@ -152,7 +145,14 @@ class FlotGraph {
                         $("#message").html(xhr.responseText);
                     }
                 },
+                success: function ( response ) {
+                    ' . $updateSet . '= [];
+                    ' . $updateSet . '.push( response );
+                    ' . $in . '
+                    ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '"), ' . $updateSet . ', ' . $updateOption . ');
+                },
             });
+            ' . $after . '
         }
     });
     ';

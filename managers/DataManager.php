@@ -28,7 +28,7 @@ class DataManager {
         $datums = array();
         $data = array();
         if(is_null($protocolNaam)){
-            $result = $con->query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
+            $result = $con->query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = -1 GROUP BY `datum`");
         } else {
             $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `naam` = '" . $protocolNaam . "'");
         }
@@ -103,24 +103,38 @@ class DataManager {
      * @param type $option
      * @return json dataset zoals flot die accepteert.
      */
-    public function getJSONset($type, $option){        
+    public function getJSONset($type, $option){
+        $output = array();
+        if(is_null($option)){
+            $output = array('label' => $type);
+        }
+        
         switch ($type) {
             case self::JAAR_TREND :
                 $data = $this->getJaarTrendData();
+                if(is_null($option))
+                    unset ($output['label']);
                 break;
             case self::MAAND :
                 $data = $this->getProtocollenMaandData($option);
+                if(!is_null($option))
+                    $output['label'] = $this->JStoUIdate($option);
+                $output['ticks'] = $this->getProtocolLabelsJSON($option);
                 break;
             case self::PROTOCOL_TREND :
                 $data = $this->getProtocolTrendData($option);
+                if(!is_null($option))
+                    $output['label'] = $option;
                 break;
             case self::LABELS :
-                return $this->getProtocolLabelsJSON($option);
+                $returnVal = $this->getProtocolLabelsJSON($option);
+                var_dump($returnVal);
+                return $returnVal;
                 break;
             default:
                 die("Unkown graph-type");
         }
-        $output = array('label' => $type);
+        
         $output['data'] = $data;
         //var_dump($output);
         return json_encode($output);
@@ -143,7 +157,7 @@ class DataManager {
         if(is_null($maand)){
             $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`)");
         } else {
-            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = " . $this->JStoSQLdate($maand) );
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = '" . $this->JStoSQLdate($maand) . "'" );
         }
         
         $i = 1;
@@ -157,7 +171,8 @@ class DataManager {
     }
     
     public function getProtocolLabelsJSON($maand){
-       return json_encode($this->getProtocolLabels($maand));
+       $output = json_encode($this->getProtocolLabels($maand));
+       return $output;
     }
      // </editor-fold>
     

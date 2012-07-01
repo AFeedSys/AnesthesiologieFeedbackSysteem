@@ -34,6 +34,22 @@ class TrendGraph extends FlotGraph {
         ' . self::BASIS_OPTIES . '
     };';
     }
+    
+    public function getBindScript($before = '', $in = '', $after = '') {
+        
+        $updateHolder = parent::getUpdatesHolder();
+        
+        $varName = self::AJAX_PREFIX . '_labels_' . $updateHolder;
+        $updateOption = self::OPTION_PREFIX . $updateHolder;
+        if(parent::getUpdateType() == DataManager::MAAND){
+            $in ='
+                ' . $updateOption . '.xaxis.ticks = eval(response.ticks);                
+                ' . $in;
+        }
+        
+        return parent::getBindScript($before, $in, $after);
+    }
+
 
 }
 
