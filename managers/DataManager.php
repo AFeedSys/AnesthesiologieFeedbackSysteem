@@ -3,6 +3,7 @@ class DataManager {
     const JAAR_TREND = "generaal";
     const MAAND = "maand";
     const PROTOCOL_TREND = "protocol";
+    const LABELS = "labels";
     
     private $labelUpdate;
     
@@ -29,7 +30,7 @@ class DataManager {
         if(is_null($protocolNaam)){
             $result = $con->query("SELECT  MAX(`datum`) AS `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` GROUP BY `datum`");
         } else {
-            $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` WHERE `naam` = " . $protocolNaam . " FROM `protocoltotalen`");
+            $result = $con->query("SELECT `datum`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `naam` = '" . $protocolNaam . "'");
         }
         while($row = $result->fetch_array()) {
             array_push($datums, $this->SQLtoJStimestamp($row['datum']));
@@ -111,10 +112,13 @@ class DataManager {
             case self::PROTOCOL_TREND :
                 $data = $this->getProtocolTrendData($option);
                 break;
+            case self::LABELS :
+                return $this->getProtocolLabelsJSON($option);
+                break;
             default:
                 die("Unkown graph-type");
         }
-        $output = array("label" => $type);
+        $output = array('label' => $type);
         $output['data'] = $data;
         //var_dump($output);
         return json_encode($output);
@@ -212,7 +216,7 @@ class DataManager {
     }
     
     private function openConnection(){
-        include 'includes/loginCheck.php';
+        loginCheck();
         $server = "localhost:3306";
         $con = null;
         if(is_null($con)) {

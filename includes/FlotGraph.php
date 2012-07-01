@@ -11,10 +11,13 @@ class FlotGraph {
             max: 100,
         },';
     
+    const URL = 'http://localhost/afeedsys/handlers/flotrequest.php';
+    
     const PLOT_PREFIX = 'plot_';
     const DATA_PREFIX = 'data_';
     const VAR_PREFIX = 'var_';
     const OPTION_PREFIX = 'option_';
+    const AJAX_PREFIX = 'ajax_';
     // </editor-fold>
     // <editor-fold desc="private Velden">
     private $dManager;
@@ -26,6 +29,7 @@ class FlotGraph {
     private $bescrijving; //Beschrijving/Uitleg van grafiek
     private $tooltip; //Tooltip wanneer over een punt in de grafiek 'gehoverd' wordt
     private $updatesHolder; //holdernaam van de graph die deze graph bij interactie moet updaten.
+    private $updateType; //type van de holder de deze grafiek update
     // </editor-fold>
     
     /**
@@ -37,8 +41,9 @@ class FlotGraph {
      * @param String $beschrijving Beschrijving/Uitleg van grafiek
      * @param String $tooltip Tooltip wanneer over een punt in de grafiek 'gehoverd' wordt
      * @param String $updatesHolder holdernaam van de graph die deze graph bij interactie moet updaten.
+     * @param DataManager::const $updateType type van de holder de deze grafiek update
      */
-    function __construct($titel, $type, $dataset, $holder, $beschrijving, $tooltip, $updatesHolder) {
+    function __construct($titel, $type, $dataset, $holder, $beschrijving, $tooltip, $updatesHolder, $updateType) {
         $this->titel = $titel;
         $this->type = $type;
         $this->jsonset = $dataset;
@@ -46,6 +51,7 @@ class FlotGraph {
         $this->tooltip = $tooltip;
         $this->holder = $holder;
         $this->updatesHolder = $updatesHolder;
+        $this->updateType = $updateType;
         
         $this->dManager = new DataManager();
     }
@@ -100,13 +106,50 @@ class FlotGraph {
      * Genereert javaScript voor het gebruik het klikken van een plot en de interactie tussen plots.
      * @return String/JavaScript 
      */
-    public function getBindScript(){
+    public function getBindScript($before='', $after=''){
+        
+        $varName = $this->getJSVarNaam(self::AJAX_PREFIX);
+        $updatePlot = self::PLOT_PREFIX . $this->updatesHolder;
         return '
+    var ' . $varName . ' = null;
     $("#' . $this->holder . '").bind("plotclick", function (event, pos, item) {
+        // Highlight geselecteerde items
         if (item) {
             '. $this->getJSVarNaam(self::PLOT_PREFIX) . '.unhighlight();
             '. $this->getJSVarNaam(self::PLOT_PREFIX) . '.highlight(item.series, item.datapoint);
-        };
+            
+            // Check of er al een ajax - verzoek bezig is.
+            if(' . $varName . ') {
+                if (' . $varName . '.readyState != 0){
+                    ' . $varName . '.abort();
+                }
+            }
+            
+            // Extract value om verder te gebruiken.
+            var clickValue = item.datapoint[0];
+            '. $before . '
+            // Invoke Ajax
+            ' . $varName . ' = $.ajax({
+                url: "' . self::URL . '",
+                success: function ( response ) {
+                    alert(response);
+                    ' . $updatePlot . '.setData("[" + response + "]");
+                    ' . $updatePlot . '.setupGrid();
+                    ' . $updatePlot . '.draw();
+                },
+                method: "GET",
+                data: {
+                  target : "' . $this->updateType . '",
+                  option : clickValue
+                },
+                error: function(xhr, textStatus, thrownError){
+                    if(textStatus != abort) {
+                        alert(textStatus + "\n" + thrownError);
+                        $("#message").html(xhr.responseText);
+                    }
+                },
+            });
+        }
     });
     ';
     }
@@ -184,6 +227,14 @@ class FlotGraph {
         $this->updatesHolder = $updatesHolder;
     }
     
+    public function getUpdateType() {
+        return $this->updateType;
+    }
+
+    public function setUpdateType($updateType) {
+        $this->updateType = $updateType;
+    }
+
     public function getDManager() {
         return $this->dManager;
     }

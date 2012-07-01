@@ -16,28 +16,33 @@ $graphs = array();
  *  $beschrijving, 
  *  $tooltip, 
  *  $updatesHolder
+ *  $updateType
  */
 array_push($graphs, new TrendGraph(
-        "Protocol Specifieke Data", 
-        DataManager::PROTOCOL_TREND, 
+        "Trend Gemiddelde", 
+        DataManager::JAAR_TREND, 
         "content1",
         "",
-        "Click om van die maand alle procotollen te zien.", 
-        "content2") );
+        "Click om van geselecteerde maand de resultaten te zien", 
+        "content2",
+        DataManager::MAAND) );
 array_push($graphs, new ProtocolOverviewGraph(
         "Data van de Maand", 
         DataManager::MAAND, 
         "content2", 
         "",
         "Click om van het geselecteerde protocol de trendlijn in te zien", 
-        "content1") );
+        "content3",
+        DataManager::PROTOCOL_TREND) );
 array_push($graphs, new TrendGraph(
-        "Trend Gemiddelde", 
-        DataManager::JAAR_TREND, 
+        "Protocol Specifieke Data", 
+        DataManager::PROTOCOL_TREND, 
         "content3",
         "",
-        "Click om van geselecteerde maand de resultaten te zien", 
-        "content2") );
+        "Click om van die maand alle procotollen te zien.", 
+        "content2",
+        DataManager::MAAND) );
+
 
 $writer = new IndexWriter($graphs);
 ?>
@@ -57,7 +62,9 @@ $writer = new IndexWriter($graphs);
     
     <body>
         <? var_dump($_SESSION['userType']); ?>
-        <?= $writer->writePlaceholders(null); ?>
+        <?= $writer->writePlaceholders(); ?>
+        
+        <div id="message"></div>
         
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">

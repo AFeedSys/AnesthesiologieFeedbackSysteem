@@ -1,21 +1,28 @@
 <?php
+    session_start();    
     //check of ajax-request is
-//    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
-//        die("Stay off my lawn!");
-//    }
-    
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
+        die("Stay off my lawn!");
+    }
+
+    // Hiermee is het mogelijk om fouten af te handelen in javascript.
+    function handleException( $e ) {
+       echo json_encode( $e );
+    }
+    set_exception_handler( 'handleException' );
+
+
     // setup van de request handler
-    include '/managers/dataManager.php';
+    include '../loaders/AutoLoader.php';
     
     $manager = new DataManager();
     
     // check benodigde ouput
-    if(!(isset($_GET['type']) && isset($_GET['option']))){
-        die ('none set');
+    if(!(isset($_REQUEST['target']) && isset($_REQUEST['option']))){
+        throw new Exception("Needed variables not set!");
     }
     
-    $type = $_GET['type'];
-    $option = $_GET['option'];
-    
-    echo $manager->getJSONset($type, $option); 
+    $target = $_REQUEST['target'];
+    $option = $_REQUEST['option'];
+    echo $manager->getJSONset($target, $option);
 ?>

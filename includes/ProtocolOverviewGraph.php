@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of BarGraph
  *
@@ -13,8 +8,8 @@
 class ProtocolOverviewGraph extends FlotGraph {
 
     //put your code here    
-    function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder) {
-        parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder);
+    function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder, $updateType) {
+        parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder, $updateType);
     }
     
     public function getOptionScript() {
@@ -22,7 +17,7 @@ class ProtocolOverviewGraph extends FlotGraph {
     var ' . parent::getJSVarNaam(self::OPTION_PREFIX) . ' = {
         bars: {
             show: true,
-            width: 0.9,
+            barWidth: 0.9,
             align: "center",
         },
         xaxis: { 
@@ -31,6 +26,16 @@ class ProtocolOverviewGraph extends FlotGraph {
         ' . self::BASIS_OPTIES . '
     };';
     }
+    
+    public function getBindScript($before='', $after='') {
+        
+        $before .= '
+                clickValue = (' . parent::getJSVarNaam(self::OPTION_PREFIX) . '.xaxis.ticks[1])[1];
+            ';
+        
+        return parent::getBindScript($before);
+    }
+
 }
 
 ?>
