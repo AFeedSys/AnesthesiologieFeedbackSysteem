@@ -25,7 +25,6 @@
     <div class="menu"> 
         <?php include 'menu.php' ?>
     </div>
-    
     <div class="content1">blok 1 </div>
     <div class="content2">blok 2 </div>
     <div class="content3">blok 3 </div>

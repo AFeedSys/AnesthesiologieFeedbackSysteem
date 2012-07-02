@@ -58,7 +58,7 @@
         
         <br>
         <p> <a href="#" onMouseOver="blokje('div1',1)" onMouseOut="blokje('div1',0)">Uitleg</a></p>
-        <div class="uitlegblokje" id="div1"><b>Klik op de grafieken om specifiekere informatie te zien.</b><br>De bovenste grafiek laat de gemiddelde feedback over alle protocollen zien.<br>De middelste grafiek laat per maand zien hoe er gescoord is.<br>De onderste grafiek laat per protocol zien hoe er gescoord is over het afgelopen jaar.<br></div>
+        <div class="uitlegblokje" id="div1"><b>Klik op de grafieken om specifiekere informatie te zien.</b><br>De bovenste grafiek laat de gemiddelde feedback over alle protocollen zien.<br><br>De middelste grafiek laat per maand per protocol zien hoe er gescoord is.<br><br>De onderste grafiek laat van het geselecteerde protocol zien hoe er gescoord is over de afgelopen maanden.<br></div>
 	<!-- <input type="button" value="Mail sturen" onclick="mailto:afs@amc.uva.nl" /> -->
 
 	<p class="email">
