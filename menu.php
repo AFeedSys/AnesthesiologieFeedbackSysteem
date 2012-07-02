@@ -37,76 +37,7 @@
        
 
 </script>
-
-<<<<<<< HEAD
 <h2>Menu</h2>
-=======
-</head>
-
-<body>
-
-	<h2>Menu</h2>
-
-	<p> Ingelogd als: </p>
-
-	<p> Functie: </p>
-
-	<input type="button" onclick="show_confirm()" value="Uitloggen" />
-        
-        <br>
-        <p> <a href="#" onMouseOver="blokje('div1',1)" onMouseOut="blokje('div1',0)">Uitleg</a></p>
-        <div class="uitlegblokje" id="div1"><b>Klik op de grafieken om specifiekere informatie te zien.</b><br>De bovenste grafiek laat de gemiddelde feedback over alle protocollen zien.<br><br>De middelste grafiek laat per maand per protocol zien hoe er gescoord is.<br><br>De onderste grafiek laat van het geselecteerde protocol zien hoe er gescoord is over de afgelopen maanden.<br></div>
-	<!-- <input type="button" value="Mail sturen" onclick="mailto:afs@amc.uva.nl" /> -->
-
-	<p class="email">
-		<a href="mailto:afs@amc.uva.nl">Mail sturen</a>
-	</p>
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 750b5378b3d688de30e458c461909f12320bfc6c
-
 <p> Ingelogd als: </p>
 
 <p> Functie: </p>
