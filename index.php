@@ -27,7 +27,7 @@ array_push($graphs, new TrendGraph(
         "content2",
         DataManager::MAAND) );
 array_push($graphs, new ProtocolOverviewGraph(
-        "Protocoloverzicht van geslecteerde Maand", 
+        "Protocoloverzicht van geselecteerde Maand", 
         DataManager::MAAND, 
         "content2", 
         "",

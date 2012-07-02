@@ -4,6 +4,7 @@ class IndexWriter {
 
     private $graphs; //array met graphs
     private $dManager; //DataManager
+    private $marks;
     
     /**
      * Constructor
@@ -12,6 +13,7 @@ class IndexWriter {
     function __construct($graphs) {
         $this->graphs = $graphs;
         $this->dManager = new DataManager();
+        $this->marks = array();
     }
 
     /**
@@ -89,7 +91,37 @@ class IndexWriter {
             ';
         }
         $markers .= '];';
+        $this->marks = $zoek;
         echo $markers; 
+    }
+    
+    public function annotatingMarkerScript(){
+        $output = ' function anoteGraphs(){
+            var o;
+            ';
+        $trendGraphs = array();
+        
+        foreach ($this->graphs as $graph){
+            if ((is_object($graph)) && ($graph instanceof TrendGraph)){
+                array_push($trendGraphs, $graph);
+            }
+        }
+        
+        $keys = array_keys($this->marks);
+        $i = 0;
+        
+        foreach ($this->marks as $mark){
+            foreach($trendGraphs as $graph){
+                $output .= 'o = ' . $graph->getJSVarNaam(FlotGraph::PLOT_PREFIX) . '.pointOffset({ x: '. ($mark + 16846207) .', y: 15});
+                        ';
+                $output .= $graph->getJQuerySelector() . '.append(\'<div style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $keys[$i] . '</div>\');
+                    ';   
+            }
+            $i++;
+        }
+        return $output . '
+            }
+            anoteGraphs();';
     }
     
     private function JStoPHPyears($stamp){

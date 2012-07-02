@@ -38,6 +38,7 @@
 $(function () {
     <?= $writer->getSharedBlock(); ?>
     <?= $writer->writeScriptBlock(); ?>
+    <?= $writer->annotatingMarkerScript()?>
 });
         </script> 
     </body>

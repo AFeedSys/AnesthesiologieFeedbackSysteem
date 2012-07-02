@@ -156,6 +156,7 @@ class FlotGraph {
                     ' . $updateSet . '.push( response );
                     ' . $in . '
                     ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '"), ' . $updateSet . ', ' . $updateOption . ');
+                     anoteGraphs();
                 },
             });
             ' . $after . '
@@ -251,6 +252,10 @@ class FlotGraph {
     
     public function getDataSet(){
         return json_decode($this->jsonSet)->data;
+    }
+    
+    public function getJQuerySelector(){
+        return '$("#' . $this->holder . '")';
     }
         // </editor-fold>
     
