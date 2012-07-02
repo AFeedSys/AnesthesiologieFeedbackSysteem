@@ -51,9 +51,9 @@ class DataManager {
         $data = array();
         
         if(is_null($maand)){
-            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam` ORDER BY `naam`");
         } else {
-            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = '" . ($this->JStoSQLdate($maand)) . "' GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = '" . ($this->JStoSQLdate($maand)) . "' GROUP BY `naam` ORDER BY `naam`");
         }
         
         $i = 1;
@@ -152,9 +152,9 @@ class DataManager {
         $namen = array();
         
         if(is_null($maand)){
-            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`)");
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) ORDER BY `naam`");
         } else {
-            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = '" . $this->JStoSQLdate($maand) . "'" );
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = '" . $this->JStoSQLdate($maand) . "' ORDER BY `naam`" );
         }
         
         $i = 1;

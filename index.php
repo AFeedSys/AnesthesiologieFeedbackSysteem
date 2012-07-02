@@ -23,7 +23,7 @@ array_push($graphs, new TrendGraph(
         DataManager::JAAR_TREND, 
         "content1",
         "",
-        "Click om van geselecteerde maand de resultaten te zien", 
+        "Klik om van de geselecteerde maand de resultaten te zien", 
         "content2",
         DataManager::MAAND) );
 array_push($graphs, new ProtocolOverviewGraph(
@@ -31,7 +31,7 @@ array_push($graphs, new ProtocolOverviewGraph(
         DataManager::MAAND, 
         "content2", 
         "",
-        "Click om van het geselecteerde protocol de trendlijn in te zien", 
+        "Klik om van het geselecteerde protocol de trendlijn in te zien", 
         "content3",
         DataManager::PROTOCOL_TREND) );
 array_push($graphs, new TrendGraph(
@@ -39,7 +39,7 @@ array_push($graphs, new TrendGraph(
         DataManager::PROTOCOL_TREND, 
         "content3",
         "",
-        "Click om van die maand alle procotollen te zien.", 
+        "Klik om van de geselecteerde maand alle procotollen te zien.", 
         "content2",
         DataManager::MAAND) );
 

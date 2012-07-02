@@ -21,12 +21,16 @@ class TrendGraph extends FlotGraph {
         
         $output .= '
     var ' . parent::getJSVarNaam(self::OPTION_PREFIX) . ' = {
-        lines: {
-            show: true, 
+        series: { 
+            lines: {
+                show: true, 
+            },
+            points: {
+                show: true,
+            },
         },
-        points: {
-            show: true,
-        },
+        //colors: [#BAE8FF, #]
+        
         xaxis: { 
             mode: "time",
             timeformat: "%b",
