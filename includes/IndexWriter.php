@@ -71,12 +71,33 @@ class IndexWriter {
         $markings = array();
         $referenceSet = $graph->getDataSet();
         
+        $zoek = array();
+        
         foreach ($referenceSet as $dataPoint) {
-            //TODO find jaren
-            //var_dump($dataPoint[0]);
+            $zoek[$this->JStoPHPyears($dataPoint[0])] = 1;
         }
         
+        $jaren = array_keys($zoek);
         
+        //Creatie markers
+        $markers = 'var markers = [
+            ';
+        foreach ($jaren as $jaar){
+            $stamp = $this->PHPtoJStimestamp($jaar);
+            $zoek[$jaar] = $stamp;
+            $markers .= '{ color: "#000", lineWidth: 1, xaxis: { from: ' . $stamp . ', to: ' . $stamp .  ' } },
+            ';
+        }
+        $markers .= '];';
+        echo $markers; 
+    }
+    
+    private function JStoPHPyears($stamp){
+        return date('Y',$stamp / 1000);
+    }
+    
+    private function PHPtoJStimestamp($date){
+        return strtotime($date . '-01-01') * 1000;
     }
 }
 

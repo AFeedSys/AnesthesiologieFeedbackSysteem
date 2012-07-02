@@ -19,7 +19,7 @@ $graphs = array();
  *  $updateType
  */
 array_push($graphs, new TrendGraph(
-        "Trend Gemiddelde", 
+        "Jaaroverzicht", 
         DataManager::JAAR_TREND, 
         "content1",
         "",
@@ -27,7 +27,7 @@ array_push($graphs, new TrendGraph(
         "content2",
         DataManager::MAAND) );
 array_push($graphs, new ProtocolOverviewGraph(
-        "Data van de Maand", 
+        "Protocoloverzicht van geslecteerde Maand", 
         DataManager::MAAND, 
         "content2", 
         "",
@@ -35,7 +35,7 @@ array_push($graphs, new ProtocolOverviewGraph(
         "content3",
         DataManager::PROTOCOL_TREND) );
 array_push($graphs, new TrendGraph(
-        "Protocol Specifieke Data", 
+        "Maandoverzicht van geselecteerde Protocol", 
         DataManager::PROTOCOL_TREND, 
         "content3",
         "",
@@ -63,13 +63,11 @@ $writer = new IndexWriter($graphs);
     <body>
         <?= $writer->writePlaceholders(); ?>
         
-        <?//= $writer->getSharedBlock(); ?>
-        <?//= $writer->writeScriptBlock();?>
-        
         <div id="message"></div>
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">
 $(function () {
+    <?= $writer->getSharedBlock(); ?>
     <?= $writer->writeScriptBlock(); ?>
 });
         </script>

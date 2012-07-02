@@ -65,7 +65,9 @@ class FlotGraph {
      * @return String div-element van grafiek
      */
     public function getHolderHTML(){
-        return '<div id="' . $this->holder . '" class="' . $this->holder . '"></div>';
+        return '
+            <h3>' . $this->titel . '</h3>
+            <div id="' . $this->holder . '" class="' . $this->holder . '"></div>';
     }
     
     /**
