@@ -58,7 +58,7 @@
         
         <br>
         <p> <a href="#" onMouseOver="blokje('div1',1)" onMouseOut="blokje('div1',0)">Uitleg</a></p>
-        <div class="uitlegblokje" id="div1">Klik op de grafieken om feedback per maand te zien</div>
+        <div class="uitlegblokje" id="div1"><b>Klik op de grafieken om specifiekere informatie te zien.</b><br>De bovenste grafiek laat de gemiddelde feedback over alle protocollen zien.<br>De middelste grafiek laat per maand zien hoe er gescoord is.<br>De onderste grafiek laat per protocol zien hoe er gescoord is over het afgelopen jaar.<br></div>
 	<!-- <input type="button" value="Mail sturen" onclick="mailto:afs@amc.uva.nl" /> -->
 
 	<p class="email">
