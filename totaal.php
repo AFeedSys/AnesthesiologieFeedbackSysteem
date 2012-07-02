@@ -30,6 +30,14 @@
             </div>
 
         </div>
+        
+        <!-- ScriptBlock for the created plots -->
+        <script language="javascript" type="text/javascript">
+$(function () {
+    <?= $writer->getSharedBlock(); ?>
+    <?= $writer->writeScriptBlock(); ?>
+});
+        </script>
  
-</body>
+    </body>
 </html>
