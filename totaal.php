@@ -24,7 +24,9 @@
             <div class="menu"> 
                 <?php include 'menu.php' ?>
             </div>
+            <div class="graphs">
                 <?= $writer->writePlaceholders(); ?>            
+            </div>
             <div class="footer"> 
                 <?php include 'footer.php' ?>
             </div>
