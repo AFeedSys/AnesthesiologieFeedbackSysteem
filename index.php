@@ -45,31 +45,5 @@ array_push($graphs, new TrendGraph(
 
 
 $writer = new IndexWriter($graphs);
+include 'totaal.php';
 ?>
-
-<html>
-    <head>
-        <script language="javascript" type="text/javascript" src="./lib/jquery-1.7.2.js"></script>
-        <script language="javascript" type="text/javascript" src="./lib/flot/jquery.flot.js"></script>
-        <script language="javascript" type="text/javascript" src="./lib/flot/jquery.flot.resize.js"></script>
-        <style type="text/css">
-            .content1,.content2,.content3{
-                width: 800px;
-                height: 30%;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <?= $writer->writePlaceholders(); ?>
-        
-        <div id="message"></div>
-        <!-- ScriptBlock for the created plots -->
-        <script language="javascript" type="text/javascript">
-$(function () {
-    <?= $writer->getSharedBlock(); ?>
-    <?= $writer->writeScriptBlock(); ?>
-});
-        </script>
-    </body>
-</html>
