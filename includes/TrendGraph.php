@@ -34,7 +34,6 @@ class TrendGraph extends FlotGraph {
             monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
             autoscaleMargin: 0.05,
         },
-        grid: { markings: markers },
         ' . self::BASIS_OPTIES . '
     };';
         
