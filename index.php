@@ -61,11 +61,12 @@ $writer = new IndexWriter($graphs);
     </head>
     
     <body>
-        <? var_dump($_SESSION['userType']); ?>
         <?= $writer->writePlaceholders(); ?>
         
-        <div id="message"></div>
+        <?//= $writer->getSharedBlock(); ?>
+        <?//= $writer->writeScriptBlock();?>
         
+        <div id="message"></div>
         <!-- ScriptBlock for the created plots -->
         <script language="javascript" type="text/javascript">
 $(function () {

@@ -24,7 +24,7 @@ class FlotGraph {
     
     private $titel; //titel weergegeven van grafiek
     private $type; //type bekend in includes/DataManager.php
-    private $jsonset; //JSONset voor referentie
+    private $jsonSet; //JSONset voor referentie
     private $holder; //de naam class die gegenereert wordt (voor CSS-gebruik)
     private $bescrijving; //Beschrijving/Uitleg van grafiek
     private $tooltip; //Tooltip wanneer over een punt in de grafiek 'gehoverd' wordt
@@ -36,7 +36,7 @@ class FlotGraph {
      * Constructor
      * @param String $titel titel weergegeven van grafiek
      * @param DataManager::const $type type bekend in includes/DataManager.php
-     * @param JSON $dataset JSONset voor referentie (wordt ge-update bij getDataScript() )
+     * @param JSON $dataset JSONset voor referentie (wordt opgevraagd wanneer $dataset == '')
      * @param String $holder Beschrijving/Uitleg van grafiek
      * @param String $beschrijving Beschrijving/Uitleg van grafiek
      * @param String $tooltip Tooltip wanneer over een punt in de grafiek 'gehoverd' wordt
@@ -46,7 +46,7 @@ class FlotGraph {
     function __construct($titel, $type, $dataset, $holder, $beschrijving, $tooltip, $updatesHolder, $updateType) {
         $this->titel = $titel;
         $this->type = $type;
-        $this->jsonset = $dataset;
+        $this->jsonSet = $dataset;
         $this->bescrijving = $beschrijving;
         $this->tooltip = $tooltip;
         $this->holder = $holder;
@@ -54,6 +54,10 @@ class FlotGraph {
         $this->updateType = $updateType;
         
         $this->dManager = new DataManager();
+        
+        if($this->jsonSet == '' || is_null($this->jsonSet)){
+            $this->jsonSet = $this->dManager->getJSONset($this->type, null);
+        }
     }
     
     /**
@@ -85,9 +89,8 @@ class FlotGraph {
      * @return String/JavaScript optievariabele 
      */
     public function getDataScript(){
-        $this->jsonset = $this->dManager->getJSONset($this->type, null);
         return '
-    var ' . $this->getJSVarNaam(self::DATA_PREFIX) . ' = '. $this->jsonset .';';
+    var ' . $this->getJSVarNaam(self::DATA_PREFIX) . ' = '. $this->jsonSet .';';
     }
     
     /**
@@ -192,11 +195,11 @@ class FlotGraph {
     }
 
     public function getJsonset() {
-        return $this->jsonset;
+        return $this->jsonSet;
     }
 
     public function setJsonset($jsonset) {
-        $this->jsonset = $jsonset;
+        $this->jsonSet = $jsonset;
     }
 
     public function getHolder() {
@@ -241,6 +244,10 @@ class FlotGraph {
 
     public function getDManager() {
         return $this->dManager;
+    }
+    
+    public function getDataSet(){
+        return json_decode($this->jsonSet)->data;
     }
         // </editor-fold>
     

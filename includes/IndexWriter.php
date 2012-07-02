@@ -32,6 +32,8 @@ class IndexWriter {
      */
     public function writeScriptBlock() {
         $scriptblock = '';
+        //Get Shared content
+                
         // options voor iedere graph
         foreach ($this->graphs as $graph){
             $scriptblock .= $graph->getOptionScript();
@@ -43,10 +45,38 @@ class IndexWriter {
             $scriptblock .= $graph->getBindScript();
         }
         
+        //Add shared section. Needs a graph to funciton
+        //$scriptblock .= $this->getSharedBlock();
+        
         return $scriptblock;
     }
-
-    public function testMap() {
+    
+    public function getSharedBlock(){
+        // Make year markings for each graph
+        
+        $reference = NULL;
+        
+        foreach($this->graphs as $graph){
+            if ((is_object($graph)) && ($graph instanceof TrendGraph)){
+                if($graph->getType() == DataManager::JAAR_TREND)
+                    $reference = $graph;
+                    break;
+            }
+        }
+        
+        if(is_null($reference)){
+            die ('No general graph found');
+        }
+        
+        $markings = array();
+        $referenceSet = $graph->getDataSet();
+        
+        foreach ($referenceSet as $dataPoint) {
+            //TODO find jaren
+            //var_dump($dataPoint[0]);
+        }
+        
+        
     }
 }
 

@@ -17,7 +17,9 @@ class TrendGraph extends FlotGraph {
     }
     
     public function getOptionScript() {
-        return '
+        $output = '';
+        
+        $output .= '
     var ' . parent::getJSVarNaam(self::OPTION_PREFIX) . ' = {
         lines: {
             show: true, 
@@ -30,9 +32,12 @@ class TrendGraph extends FlotGraph {
             timeformat: "%b",
             tickSize: [1, "month"],
             monthNames: ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
+            autoscaleMargin: 0.05,
         },
         ' . self::BASIS_OPTIES . '
     };';
+        
+        return $output;
     }
     
     public function getBindScript($before = '', $in = '', $after = '') {

@@ -22,6 +22,7 @@ class ProtocolOverviewGraph extends FlotGraph {
         },
         xaxis: { 
             ticks: ' . parent::getDManager()->getProtocolLabelsJSON(null) . ',
+            autoscaleMargin: 0.1,
         }, 
         ' . self::BASIS_OPTIES . '
     };';

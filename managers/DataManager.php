@@ -53,7 +53,6 @@ class DataManager {
         if(is_null($maand)){
             $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam`");
         } else {
-            //var_dump($this->JStoSQLdate($maand));
             $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = '" . ($this->JStoSQLdate($maand)) . "' GROUP BY `naam`");
         }
         
@@ -128,7 +127,6 @@ class DataManager {
                 break;
             case self::LABELS :
                 $returnVal = $this->getProtocolLabelsJSON($option);
-                var_dump($returnVal);
                 return $returnVal;
                 break;
             default:
@@ -136,7 +134,6 @@ class DataManager {
         }
         
         $output['data'] = $data;
-        //var_dump($output);
         return json_encode($output);
     } 
     // </editor-fold>
