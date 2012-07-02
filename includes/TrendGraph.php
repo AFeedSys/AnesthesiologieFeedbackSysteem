@@ -27,9 +27,10 @@ class TrendGraph extends FlotGraph {
             },
             points: {
                 show: true,
+                radius: 7,
+                fillColor: "#FFFFFF",
             },
         },
-        //colors: [#BAE8FF, #]
         
         xaxis: { 
             mode: "time",

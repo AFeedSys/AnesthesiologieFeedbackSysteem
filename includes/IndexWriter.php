@@ -54,8 +54,9 @@ class IndexWriter {
     }
     
     public function getSharedBlock(){
-        // Make year markings for each graph
+        $output = ''; 
         
+        // Make year markings for each TrendGraph
         $reference = NULL;
         
         foreach($this->graphs as $graph){
@@ -92,12 +93,22 @@ class IndexWriter {
         }
         $markers .= '];';
         $this->marks = $zoek;
-        echo $markers; 
+        
+        //To output
+        $output .= $markers; 
+        
+        return $output;
     }
     
     public function annotatingMarkerScript(){
         $output = ' function anoteGraphs(){
-            var o;
+            //Clearing existing code
+            ';
+//        foreach ($this->graphs as $graph){
+//        $output .= $graph->getJQuerySelector() . '.empty();';
+//        }
+            
+        $output .= 'var o;
             ';
         $trendGraphs = array();
         
@@ -107,14 +118,14 @@ class IndexWriter {
             }
         }
         
-        $keys = array_keys($this->marks);
+        $jaren = array_keys($this->marks);
         $i = 0;
         
         foreach ($this->marks as $mark){
             foreach($trendGraphs as $graph){
                 $output .= 'o = ' . $graph->getJSVarNaam(FlotGraph::PLOT_PREFIX) . '.pointOffset({ x: '. ($mark + 16846207) .', y: 15});
                         ';
-                $output .= $graph->getJQuerySelector() . '.append(\'<div style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $keys[$i] . '</div>\');
+                $output .= $graph->getJQuerySelector() . '.apend(\'<div style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $jaren[$i] . '</div>\');
                     ';   
             }
             $i++;

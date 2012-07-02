@@ -10,7 +10,8 @@ class FlotGraph {
         yaxis: {
             min: 0,
             max: 100,
-        },';
+        },
+        ';
     
     const URL = 'http://localhost/afeedsys/handlers/flotrequest.php';
     
