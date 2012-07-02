@@ -4,7 +4,8 @@ class FlotGraph {
     const BASIS_OPTIES = '
         grid: {
             hoverable: true, 
-            clickable: true
+            clickable: true,
+            markings: markers,
         },
         yaxis: {
             min: 0,
