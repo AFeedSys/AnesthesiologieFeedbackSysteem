@@ -69,6 +69,7 @@ $(function () {
 
         // then fetch the data with jQuery
         function onDataReceived(series) {
+            alert(series);
             // extract the first coordinate pair so you can see that
             // data is now an ordinary Javascript object
             var firstcoordinate = '(' + series.data[0][0] + ', ' + series.data[0][1] + ')';

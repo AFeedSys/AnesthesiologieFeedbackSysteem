@@ -1,0 +1,129 @@
+html, body{ 
+ margin:0; 
+ padding:0px; 
+ } 
+ 
+#pagewidth{ }
+ 
+.header{
+ position:relative; 
+ height:6%; 
+ background-color:#BAE8FF; 
+ width:100%;
+ display:block;
+ overflow:auto;
+ padding-top: 0px;
+ -moz-border-radius: 15px;
+ border-radius: 15px;
+} 
+ 
+.menu{
+ height: 564px;
+ width:15%; 
+ float:left; 
+ position:relative; 
+ background-color:#BAE8FF;
+ padding-left:8px; 
+ -moz-border-radius: 15px;
+ border-radius: 15px;
+ }
+  
+.content1,.content2,.content3{
+ background-color:white;  
+ position: relative;
+ height:188px; 
+ width:83%;
+ float:right;
+ padding-left: 6px; 
+ border-left-style: solid;
+ border-left-color: grey;
+ border-left-width: 2px;
+ }
+ 
+ .content1{
+     border-top-style: solid;
+     border-top-color:grey;
+     border-top-right-radius: 15px;
+     border-top-left-radius: 15px;
+     
+ }
+ .content3{
+     border-bottom-right-radius: 15px;
+     border-bottom-left-radius: 15px;
+     
+ }
+ 
+ 
+ .container{
+ background-color:#BAE8FF; 
+ border-style:solid;
+ border-width: 1px;
+ border-color: grey;
+  -moz-border-radius: 15px;
+ border-radius: 15px;
+ }
+ 
+ 
+.footer{
+ height:5%; 
+ background-color:#E8F7FF; 
+ clear:both;
+ display:block;
+ overflow:auto;
+ padding:10px;
+ border-top-style:solid;
+ border-top-width:2px;
+ -moz-border-radius:15px;
+ border-radius:15px;
+ border-color: grey;
+ 
+} 
+
+.email{
+    position:absolute;
+    bottom:0;
+}
+
+.logo{
+float: left;
+padding-right: 10px;
+}
+ 
+.uitlegblokje{
+    border-style:dotted;
+    background-color:#E8F7FF;
+    visibility: hidden;
+}
+ 
+ 
+/* ******************************************************************** */ 
+/* Clearfix: http://csscreator.com/attributes/containedfloat.php        */
+/* ******************************************************************** */
+.clearfix:after {
+ content: "."; 
+ display: block; 
+height: 0; 
+ clear: both; 
+ visibility: hidden;
+ }
+ 
+.clearfix{display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix{height: 1%;}
+.clearfix{display: block;}
+/* End hide from IE-mac */  
+
+
+ 
+ 
+/* ******************************************************************** */ 
+/*                      printer styles                                  */ 
+/* ******************************************************************** */ 
+     
+ @media print{ 
+/*hide the left column when printing*/ 
+#leftcol{display:none;} 
+#twocols, #maincol{width:100%; float:none;}
+}
+
