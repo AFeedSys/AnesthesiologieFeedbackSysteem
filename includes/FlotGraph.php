@@ -69,7 +69,7 @@ class FlotGraph {
     public function getHolderHTML(){
         return '
             <h3>' . $this->titel . '</h3> <span>' . $this->tooltip . '</span>
-            <div id="' . $this->holder . '" class="' . $this->holder . '"></div>';
+            <div id="' . $this->holder . '" class="graph"></div>';
     }
     
     /**
@@ -134,6 +134,8 @@ class FlotGraph {
                 }
             }
             
+            //$("#' . $this->updatesHolder . '").hide("slow");
+            
             // Extract value om verder te gebruiken.
             var clickValue = item.datapoint[0];
             '. $before . '
@@ -156,7 +158,7 @@ class FlotGraph {
                     ' . $updateSet . '= [];
                     ' . $updateSet . '.push( response );
                     ' . $in . '
-                    ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '"), ' . $updateSet . ', ' . $updateOption . ');
+                    ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '").show("slow"), ' . $updateSet . ', ' . $updateOption . ');
                      anoteGraphs();
                 },
             });
@@ -255,8 +257,8 @@ class FlotGraph {
         return json_decode($this->jsonSet)->data;
     }
     
-    public function getJQuerySelector(){
-        return '$("#' . $this->holder . '")';
+    public function getJQuerySelector($sub=''){
+        return '$("#' . $this->holder . '"'.$sub.')';
     }
         // </editor-fold>
     

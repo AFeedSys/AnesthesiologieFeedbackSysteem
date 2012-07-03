@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="./styles/totaal2.css">
-        <link rel="stylesheet" type="text/css" href="./styles/stijl.css">
+        <link rel="stylesheet" type="text/css" href="./styles/main.css" />
 
         <script language="javascript" type="text/javascript" src="./lib/jquery-1.7.2.js"></script>
         <script language="javascript" type="text/javascript" src="./lib/flot/jquery.flot.js"></script>
@@ -13,11 +12,11 @@
 
     <body>
 
-        <div class="container">
+        <div class="container" id="pagewidth">
             <div class="header">
                 <h1>
                 <img class="logo" src="amc.png" width="120" height="65" align="middle" title="AMC">
-                <img class="feedsyslogo" src="Afeedsyslogo1.png" width="15%">
+                <img class="feedsyslogo" src="logo.png" height="100px">
                 </h1>
             </div>
 

@@ -45,5 +45,8 @@ array_push($graphs, new TrendGraph(
 
 
 $writer = new IndexWriter($graphs);
+
+//$writer->writeScriptBlock();
+
 include 'totaal.php';
 ?>

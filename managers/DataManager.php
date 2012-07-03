@@ -5,8 +5,6 @@ class DataManager {
     const PROTOCOL_TREND = "protocol";
     const LABELS = "labels";
     
-    private $labelUpdate;
-    
     // <editor-fold desc="public : verkrijgen van data-arrays">
     /*
      * ******************************************
@@ -210,12 +208,6 @@ class DataManager {
     
     private function toPercentage($part, $totaal){
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
-    }
-    
-    private function getLabelUpdate(){
-        $temp = $this->labelUpdate;
-        $this->labelUpdate = null;
-        return $temp == null ? '' : $temp;
     }
     // </editor-fold>
     

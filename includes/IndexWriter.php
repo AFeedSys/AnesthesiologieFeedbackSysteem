@@ -71,7 +71,6 @@ class IndexWriter {
             die ('No general graph found');
         }
         
-        $markings = array();
         $referenceSet = $graph->getDataSet();
         
         $zoek = array();
@@ -97,19 +96,23 @@ class IndexWriter {
         //To output
         $output .= $markers; 
         
+        //Add resize trigger to make the new anotations
+        $output .= "
+            $(window).resize(function() {
+                anoteGraphs();
+            });
+            ";
+        
         return $output;
     }
     
     public function annotatingMarkerScript(){
         $output = ' function anoteGraphs(){
-            //Clearing existing code
-            ';
-//        foreach ($this->graphs as $graph){
-//        $output .= $graph->getJQuerySelector() . '.empty();';
-//        }
+                    $(".anotation").remove();
+                    ';
             
         $output .= 'var o;
-            ';
+                    ';
         $trendGraphs = array();
         
         foreach ($this->graphs as $graph){
@@ -125,8 +128,8 @@ class IndexWriter {
             foreach($trendGraphs as $graph){
                 $output .= 'o = ' . $graph->getJSVarNaam(FlotGraph::PLOT_PREFIX) . '.pointOffset({ x: '. ($mark + 16846207) .', y: 15});
                         ';
-                $output .= $graph->getJQuerySelector() . '.apend(\'<div style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $jaren[$i] . '</div>\');
-                    ';   
+                $output .= $graph->getJQuerySelector() . '.append(\'<div class="anotation" style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $jaren[$i] . '</div>\');
+                        ';   
             }
             $i++;
         }
