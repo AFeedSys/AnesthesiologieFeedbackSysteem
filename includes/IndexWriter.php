@@ -44,7 +44,7 @@ class IndexWriter {
         foreach ($this->graphs as $graph){
             $scriptblock .= $graph->getDataScript();
             $scriptblock .= $graph->getPlotScript();
-            $scriptblock .= $graph->getBindScript();
+            $scriptblock .= $graph->getBindScripts();
         }
         
         //Add shared section. Needs a graph to funciton

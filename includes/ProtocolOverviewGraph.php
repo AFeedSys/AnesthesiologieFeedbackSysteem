@@ -28,7 +28,7 @@ class ProtocolOverviewGraph extends FlotGraph {
     };';
     }
     
-    public function getBindScript($beforeAjax='', $inAjax='', $afterAjax='', $customHoverMessage='') {
+    public function getBindScripts($beforeAjax='', $inAjax='', $afterAjax='', $customHoverMessage='') {
         
         $beforeAjax .= '
                 clickValue = (' . parent::getJSVarNaam(self::OPTION_PREFIX) . '.xaxis.ticks[clickValue-1])[1];
