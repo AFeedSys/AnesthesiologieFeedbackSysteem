@@ -4,6 +4,7 @@ class IndexWriter {
 
     private $graphs; //array met graphs
     private $dManager; //DataManager
+    private $marks;
     
     /**
      * Constructor
@@ -12,6 +13,7 @@ class IndexWriter {
     function __construct($graphs) {
         $this->graphs = $graphs;
         $this->dManager = new DataManager();
+        $this->marks = array();
     }
 
     /**
@@ -42,7 +44,7 @@ class IndexWriter {
         foreach ($this->graphs as $graph){
             $scriptblock .= $graph->getDataScript();
             $scriptblock .= $graph->getPlotScript();
-            $scriptblock .= $graph->getBindScript();
+            $scriptblock .= $graph->getBindScripts();
         }
         
         //Add shared section. Needs a graph to funciton
@@ -52,8 +54,9 @@ class IndexWriter {
     }
     
     public function getSharedBlock(){
-        // Make year markings for each graph
+        $output = ''; 
         
+        // Make year markings for each TrendGraph
         $reference = NULL;
         
         foreach($this->graphs as $graph){
@@ -68,7 +71,6 @@ class IndexWriter {
             die ('No general graph found');
         }
         
-        $markings = array();
         $referenceSet = $graph->getDataSet();
         
         $zoek = array();
@@ -89,7 +91,83 @@ class IndexWriter {
             ';
         }
         $markers .= '];';
-        echo $markers; 
+        $this->marks = $zoek;
+        
+        //To output
+        $output .= $markers; 
+        
+        //Add resize trigger to make the new anotations
+           $output .= "
+            $(window).resize(function() {
+                anoteGraphs();
+            });
+            
+            var emptyGraph = {\"label\":\"protocol\",\"data\":[]};
+     function showTooltip(x, y, contents) {
+        $('<div id=\"tooltip\" class=\"tooltip\">' + contents + '</div>').css( {
+                top: y+5,
+                left: x+5,
+        }).appendTo(\"body\").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    var maand=new Array();
+        maand[0]=\"Januari\";
+        maand[1]=\"Februari\";
+        maand[2]=\"Maart\";
+        maand[3]=\"April\";
+        maand[4]=\"Mei\";
+        maand[5]=\"Juni\";
+        maand[6]=\"Juli\";
+        maand[7]=\"Augustus\";
+        maand[8]=\"September\";
+        maand[9]=\"October\";
+        maand[10]=\"November\";
+        maand[11]=\"December\";
+        
+    function findFlotPoint(value, array){
+        for(var i = 0 ; i < array.length; i++) {
+            var item = array[i][0];
+            if( item == value){
+                return i;
+            }
+        }
+    }
+    ";
+        
+        return $output;
+    }
+    
+    public function annotatingMarkerScript(){
+        $output = ' function anoteGraphs(){
+                    $(".anotation").remove();
+                    ';
+            
+        $output .= 'var o;
+                    ';
+        $trendGraphs = array();
+        
+        foreach ($this->graphs as $graph){
+            if ((is_object($graph)) && ($graph instanceof TrendGraph)){
+                array_push($trendGraphs, $graph);
+            }
+        }
+        
+        $jaren = array_keys($this->marks);
+        $i = 0;
+        
+        foreach ($this->marks as $mark){
+            foreach($trendGraphs as $graph){
+                $output .= 'o = ' . $graph->getJSVarNaam(FlotGraph::PLOT_PREFIX) . '.pointOffset({ x: '. ($mark + 16846207) .', y: 15});
+                        ';
+                $output .= $graph->getJQuerySelector() . '.append(\'<div class="anotation" style="position:absolute;left:\' + (o.left + 4) + \'px;top: \' + o.top + \'px;color:#666;font-size:smaller">' . $jaren[$i] . '</div>\');
+                        ';   
+            }
+            $i++;
+        }
+        return $output . '
+            }
+            anoteGraphs();';
     }
     
     private function JStoPHPyears($stamp){

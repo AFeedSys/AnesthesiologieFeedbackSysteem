@@ -5,8 +5,6 @@ class DataManager {
     const PROTOCOL_TREND = "protocol";
     const LABELS = "labels";
     
-    private $labelUpdate;
-    
     // <editor-fold desc="public : verkrijgen van data-arrays">
     /*
      * ******************************************
@@ -51,9 +49,9 @@ class DataManager {
         $data = array();
         
         if(is_null($maand)){
-            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) GROUP BY `naam` ORDER BY `naam`");
         } else {
-            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = '" . ($this->JStoSQLdate($maand)) . "' GROUP BY `naam`");
+            $result = $con->query("SELECT `naam`, `shouldTotaal`, `doneTotaal` FROM `protocoltotalen` WHERE `datum` = '" . ($this->JStoSQLdate($maand)) . "' GROUP BY `naam` ORDER BY `naam`");
         }
         
         $i = 1;
@@ -86,6 +84,14 @@ class DataManager {
         
         return $this->getMap($datums, $data); 
     }
+    
+    public function getLaatsteMaand(){
+        $con = $this->openConnection();
+        $result = $con->query("SELECT MAX(datum) as maxD FROM `protocoltotalen`");
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        return $row['maxD'];
+    }
+    
     // </editor-fold>
     
     // <editor-fold desc="public : JSON-sets">
@@ -116,8 +122,13 @@ class DataManager {
                 break;
             case self::MAAND :
                 $data = $this->getProtocollenMaandData($option);
-                if(!is_null($option))
-                    $output['label'] = $this->JStoUIdate($option);
+                $datum = null;
+                if(!is_null($option)){
+                    $datum = $this->JStoUIdate($option);
+                } else {
+                    $datum = $this->SQLtoUIdate($this->getLaatsteMaand());
+                }
+                $output['label'] = $datum;
                 $output['ticks'] = $this->getProtocolLabelsJSON($option);
                 break;
             case self::PROTOCOL_TREND :
@@ -152,9 +163,9 @@ class DataManager {
         $namen = array();
         
         if(is_null($maand)){
-            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`)");
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = (SELECT MAX(datum) FROM `protocoltotalen`) ORDER BY `naam`");
         } else {
-            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = '" . $this->JStoSQLdate($maand) . "'" );
+            $result = $con->query("SELECT DISTINCT `naam` FROM `protocoltotalen` WHERE `datum` = '" . $this->JStoSQLdate($maand) . "' ORDER BY `naam`" );
         }
         
         $i = 1;
@@ -197,7 +208,7 @@ class DataManager {
     }
     
     private function SQLtoUIdate($date){
-        return date('M-Y', $date);
+        return date('M-Y', strtotime($date));
     }
     
     private function JStoSQLdate($stamp){
@@ -210,12 +221,6 @@ class DataManager {
     
     private function toPercentage($part, $totaal){
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
-    }
-    
-    private function getLabelUpdate(){
-        $temp = $this->labelUpdate;
-        $this->labelUpdate = null;
-        return $temp == null ? '' : $temp;
     }
     // </editor-fold>
     
