@@ -97,11 +97,43 @@ class IndexWriter {
         $output .= $markers; 
         
         //Add resize trigger to make the new anotations
-        $output .= "
+           $output .= "
             $(window).resize(function() {
                 anoteGraphs();
             });
-            ";
+            
+            var emptyGraph = {\"label\":\"protocol\",\"data\":[]};
+     function showTooltip(x, y, contents) {
+        $('<div id=\"tooltip\" class=\"tooltip\">' + contents + '</div>').css( {
+                top: y+5,
+                left: x+5,
+        }).appendTo(\"body\").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    var maand=new Array();
+        maand[0]=\"Januari\";
+        maand[1]=\"Februari\";
+        maand[2]=\"Maart\";
+        maand[3]=\"April\";
+        maand[4]=\"Mei\";
+        maand[5]=\"Juni\";
+        maand[6]=\"Juli\";
+        maand[7]=\"Augustus\";
+        maand[8]=\"September\";
+        maand[9]=\"October\";
+        maand[10]=\"November\";
+        maand[11]=\"December\";
+        
+    function findFlotPoint(value, array){
+        for(var i = 0 ; i < array.length; i++) {
+            var item = array[i][0];
+            if( item == value){
+                return i;
+            }
+        }
+    }
+    ";
         
         return $output;
     }

@@ -28,13 +28,20 @@ class ProtocolOverviewGraph extends FlotGraph {
     };';
     }
     
-    public function getBindScript($before='', $in='', $after='') {
+    public function getBindScript($beforeAjax='', $inAjax='', $afterAjax='', $customHoverMessage='') {
         
-        $before .= '
+        $beforeAjax .= '
                 clickValue = (' . parent::getJSVarNaam(self::OPTION_PREFIX) . '.xaxis.ticks[clickValue-1])[1];
             ';
         
-        return parent::getBindScript($before, $in, $after);
+        if($customHoverMessage == '') {
+            $customHoverMessage .= parent::getJSVarNaam(self::OPTION_PREFIX) .'.xaxis.ticks[x-1][1] +" : <br />" + y + "%"';
+        } else {
+            $customHoverMessage .= $customHoverMessage;
+        }
+        
+        
+        return parent::getBindScripts($beforeAjax, $inAjax, $afterAjax, $customHoverMessage);
     }
 
 }

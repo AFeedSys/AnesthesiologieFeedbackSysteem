@@ -84,6 +84,14 @@ class DataManager {
         
         return $this->getMap($datums, $data); 
     }
+    
+    public function getLaatsteMaand(){
+        $con = $this->openConnection();
+        $result = $con->query("SELECT MAX(datum) as maxD FROM `protocoltotalen`");
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        return $row['maxD'];
+    }
+    
     // </editor-fold>
     
     // <editor-fold desc="public : JSON-sets">
@@ -114,8 +122,13 @@ class DataManager {
                 break;
             case self::MAAND :
                 $data = $this->getProtocollenMaandData($option);
-                if(!is_null($option))
-                    $output['label'] = $this->JStoUIdate($option);
+                $datum = null;
+                if(!is_null($option)){
+                    $datum = $this->JStoUIdate($option);
+                } else {
+                    $datum = $this->SQLtoUIdate($this->getLaatsteMaand());
+                }
+                $output['label'] = $datum;
                 $output['ticks'] = $this->getProtocolLabelsJSON($option);
                 break;
             case self::PROTOCOL_TREND :
@@ -195,7 +208,7 @@ class DataManager {
     }
     
     private function SQLtoUIdate($date){
-        return date('M-Y', $date);
+        return date('M-Y', strtotime($date));
     }
     
     private function JStoSQLdate($stamp){

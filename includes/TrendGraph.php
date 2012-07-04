@@ -56,7 +56,7 @@ class TrendGraph extends FlotGraph {
             points: {
                 show: true,
                 radius: 7,
-                fillColor: "#FFFFFF",
+                fillColor: "#F7EAAF",
             },
         },
         
@@ -75,19 +75,39 @@ class TrendGraph extends FlotGraph {
         return $output;
     }
     
-    public function getBindScript($before = '', $in = '', $after = '') {
+    public function getBindScript($beforeAjax='', $inAjax='', $afterAjax='', $customHoverMessage='') {
         
         $updateHolder = parent::getUpdatesHolder();
         
-        $varName = self::AJAX_PREFIX . '_labels_' . $updateHolder;
-        $updateOption = self::OPTION_PREFIX . $updateHolder;
         if(parent::getUpdateType() == DataManager::MAAND){
-            $in ='
-                ' . $updateOption . '.xaxis.ticks = eval(response.ticks);                
-                ' . $in;
+            $updateOption = self::OPTION_PREFIX . $updateHolder;
+            $innerAjax ='
+                var rTicks = response.ticks;
+                //if(rTicks.indexof(";" == -1){ // Vang hier misbruik eval op
+                    
+                ' . $updateOption . '.xaxis.ticks = eval(rTicks);//} //TODO remove this evil method
+                ';
+            if(parent::getType() == DataManager::JAAR_TREND){
+                $innerAjax .= 'plot_content3 = $.plot($("#content3"), [emptyGraph], option_content3); //TODO make this dynamic
+                ';
+            }
+            if(parent::getType() == DataManager::PROTOCOL_TREND){
+                $innerAjax = 'plot_content1.unhighlight(); //TODO make this dynamic
+                plot_content1.highlight(0, data_content1.data[findFlotPoint(item.datapoint[0], data_content1.data)]);
+                ';
+            }
+
         }
         
-        return parent::getBindScript($before, $in, $after);
+        $inAjax .= $innerAjax;
+        
+        if($customHoverMessage == '') {
+            $customHoverMessage .= 'maand[dt.getMonth()] + " " + dt.getFullYear() + ": <br />" + y + "%"';
+        } else {
+            $customHoverMessage .= $customHoverMessage;
+        }
+        
+        return parent::getBindScripts($beforeAjax, $inAjax, $afterAjax, $customHoverMessage);
     }
 
 

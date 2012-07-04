@@ -6,6 +6,7 @@ class FlotGraph {
             hoverable: true, 
             clickable: true,
             markings: markers,
+            mouseActiveRadius: 100,
         },
         yaxis: {
             min: 0,
@@ -13,7 +14,7 @@ class FlotGraph {
         },
         ';
     
-    const URL = 'http://localhost/afeedsys/handlers/flotrequest.php';
+    const FLOT_REQUEST_URL = 'http://localhost/afeedsys/handlers/flotrequest.php';
     
     const PLOT_PREFIX = 'plot_';
     const DATA_PREFIX = 'data_';
@@ -113,15 +114,15 @@ class FlotGraph {
      * Genereert javaScript voor het gebruik het klikken van een plot en de interactie tussen plots.
      * @return String/JavaScript 
      */
-    public function getBindScript($before='', $in='', $after=''){
+    public function getBindScripts($beforeAjax='', $inAjax='', $afterAjax='', $customHoverMessage=''){
         
         $varName = $this->getJSVarNaam(self::AJAX_PREFIX);
         $updatePlot = self::PLOT_PREFIX . $this->updatesHolder;
         $updateSet = self::DATA_PREFIX . $this->updatesHolder;
         $updateOption = self::OPTION_PREFIX . $this->updatesHolder;
-        return '
+        $output = '
     var ' . $varName . ' = null;
-    $("#' . $this->holder . '").bind("plotclick", function (event, pos, item) {
+    ' . $this->getJQuerySelector() . '.bind("plotclick", function (event, pos, item) {
         // Highlight geselecteerde items
         if (item) {
             '. $this->getJSVarNaam(self::PLOT_PREFIX) . '.unhighlight();
@@ -138,10 +139,10 @@ class FlotGraph {
             
             // Extract value om verder te gebruiken.
             var clickValue = item.datapoint[0];
-            '. $before . '
+            '. $beforeAjax . '
             // Invoke Ajax
             ' . $varName . ' = $.ajax({
-                url: "' . self::URL . '",
+                url: "' . self::FLOT_REQUEST_URL . '",
                 dataType: "json",
                 method: "GET",
                 data: {
@@ -149,7 +150,7 @@ class FlotGraph {
                   option : clickValue
                 },
                 error: function(xhr, textStatus, thrownError){
-                    if(textStatus != abort) {
+                    if(textStatus != "abort") {
                         alert(textStatus + "\n" + thrownError);
                         $("#message").html(xhr.responseText);
                     }
@@ -157,16 +158,44 @@ class FlotGraph {
                 success: function ( response ) {
                     ' . $updateSet . '= [];
                     ' . $updateSet . '.push( response );
-                    ' . $in . '
+                    ' . $inAjax . '
                     ' . $updatePlot . ' = $.plot($("#' . $this->updatesHolder . '").show("slow"), ' . $updateSet . ', ' . $updateOption . ');
                      anoteGraphs();
                 },
             });
-            ' . $after . '
+            ' . $afterAjax . '
         }
     });
+    ' . $this->getJQuerySelector() . '.bind("plothover", function (event, pos, item) {
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+                    
+                    
+                    $(".tooltip").remove();
+                    
+                    var x = item.datapoint[0],
+                        y = item.datapoint[1].toFixed(1);
+                    
+                    var dt = new Date(x);
+                    
+                    showTooltip(item.pageX, item.pageY,';
+        if($customHoverMessage == '') {
+            $output .= 'x + ": " + y';
+        } else {
+            $output .= $customHoverMessage;
+        }
+                                
+                $output .= ')
+                }
+            } else {
+                previousPoint = null;
+            }
+    });
     ';
-    }
+                
+    return $output;
+}
     
     /**
      * Genereert de variabele-adres naar aanleiding van een gegeven prefix.
