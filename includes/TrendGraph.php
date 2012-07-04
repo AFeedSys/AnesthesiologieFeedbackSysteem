@@ -83,7 +83,7 @@ class TrendGraph extends FlotGraph {
             $updateOption = self::OPTION_PREFIX . $updateHolder;
             $innerAjax ='
                 var rTicks = response.ticks;
-                if(rTicks.indexof(";") == -1){ // Vang hier misbruik eval op
+                if(rTicks.indexOf(";") == -1){ // Vang hier misbruik eval op
                     ' . $updateOption . '.xaxis.ticks = eval(rTicks);
                 } //TODO remove this evil method
                 ';
@@ -92,7 +92,7 @@ class TrendGraph extends FlotGraph {
                 ';
             }
             if(parent::getType() == DataManager::PROTOCOL_TREND){
-                $innerAjax = 'plot_content1.unhighlight(); //TODO make this dynamic
+                $innerAjax .= 'plot_content1.unhighlight(); //TODO make this dynamic
                 plot_content1.highlight(0, data_content1.data[findFlotPoint(item.datapoint[0], data_content1.data)]);
                 ';
             }
