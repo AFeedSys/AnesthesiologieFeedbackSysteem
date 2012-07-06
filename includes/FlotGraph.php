@@ -40,7 +40,7 @@ class FlotGraph {
     */
     const PLOT_PREFIX = 'plot_'; /**< Gebruikt voor genereren van plot variabele */
     const DATA_PREFIX = 'data_'; /**< Gebruikt voor genereren van data variabele */
-    const VAR_PREFIX = 'var_'; /**< Gebruikt voor genereren van var variabele */
+    const OPTION_PREFIX = 'option_'; /**< Gebruikt voor genereren van option variabele */
     const AJAX_PREFIX = 'ajax_'; /**< Gebruikt voor genereren van ajax calls variabele */
     /** @} */
     // </editor-fold>
