@@ -1,5 +1,9 @@
 <?
 
+/**
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
+ */
 class IndexWriter {
 
     private $graphs; //array met graphs
@@ -32,7 +36,7 @@ class IndexWriter {
      * Genereert alle benodigde javascript elementen. Deze method moet wel omgeven worden door een script-element.
      * @return String/Javascript 
      */
-    public function writeScriptBlock() {
+    public function writeScriptBlocks() {
         $scriptblock = '';
         //Get Shared content
                 
@@ -53,6 +57,10 @@ class IndexWriter {
         return $scriptblock;
     }
     
+    /**
+     * Voegt gedeelde javascript elementen. Deze method moet wel omgeven worden door script-blok.
+     * @return JavaScript/String
+     */
     public function getSharedBlock(){
         $output = ''; 
         
@@ -100,6 +108,7 @@ class IndexWriter {
            $output .= "
             $(window).resize(function() {
                 anoteGraphs();
+                $(\".tooltip\").remove();
             });
             
             var emptyGraph = {\"label\":\"protocol\",\"data\":[]};
@@ -138,6 +147,11 @@ class IndexWriter {
         return $output;
     }
     
+    /**
+     * Genereert javascript code voor het 
+     * @todo Dynamisch maken van deze element, of verplaatsen buiten class.
+     * @return JavaScript/String
+     */
     public function annotatingMarkerScript(){
         $output = ' function anoteGraphs(){
                     $(".anotation").remove();
@@ -167,13 +181,21 @@ class IndexWriter {
         }
         return $output . '
             }
-            anoteGraphs();';
+            anoteGraphs();
+            plot_content1.highlight(0, data_content1.data[data_content1.data.length - 1]);
+            '; //TODO move this out of here
     }
     
+    /**
+     * @todo marked voor refactoring, Bestaat al in DataManager
+     */
     private function JStoPHPyears($stamp){
         return date('Y',$stamp / 1000);
     }
     
+    /**
+     * @todo marked voor refactoring, Bestaat al in DataManager
+     */
     private function PHPtoJStimestamp($date){
         return strtotime($date . '-01-01') * 1000;
     }

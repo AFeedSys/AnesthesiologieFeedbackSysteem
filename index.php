@@ -1,4 +1,10 @@
 <? 
+
+/**
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
+ */
+
 session_start();
 $_SESSION['userType'] = 'gebruiker';
 $_SESSION['login'] = 1; 
@@ -46,7 +52,7 @@ array_push($graphs, new TrendGraph(
 
 $writer = new IndexWriter($graphs);
 
-$writer->writeScriptBlock();
+$writer->writeScriptBlocks();
 
 include 'totaal.php';
 ?>

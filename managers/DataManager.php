@@ -1,10 +1,19 @@
 <?php
+
+/**
+ * @todo prepare statement!
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
+ */
 class DataManager {
-    const JAAR_TREND = "generaal";
-    const MAAND = "maand";
-    const PROTOCOL_TREND = "protocol";
-    const LABELS = "labels";
-    
+    /** \addtogroup  constants die aangeven welke type data de DataManager kan afhandelen
+    *  @{
+    */
+    const JAAR_TREND = "generaal"; /**< identificatie voor het jaarovericht*/
+    const MAAND = "maand"; /**< identificatie voor het maandoverzicht met geregistreerde protocollen */
+    const PROTOCOL_TREND = "protocol"; /**< identificatie voor het verkrijgen van trenddata van een protocol*/
+    const LABELS = "labels"; /**< identificatie voor het verkrijgen van de labels van een maand*/
+    /** @} */
     // <editor-fold desc="public : verkrijgen van data-arrays">
     /*
      * ******************************************
@@ -16,9 +25,9 @@ class DataManager {
      */
     
     /**
-     * 
+     * Genereert trendgegevens van een protocol
      * @param String $protocolNaam gegeven protocol
-     * @return array Flot-compatible array met trend van 1 protocol 
+     * @return Array Flot-compatible array met trend van 1 protocol 
      */
     public function getProtocolTrendData($protocolNaam){
         $con = $this->openConnection();
@@ -42,6 +51,11 @@ class DataManager {
         return $this->getMap($datums, $data);
     }
     
+    /**
+     * Genereert categoriele data voor een maand voor alle geregistreerde data
+     * @param JSTimestamp $maand datum als JS timestamp
+     * @return Array Flot-compatible array met protocol gegevens van 1 maand
+     */
     public function getProtocollenMaandData($maand){
         $con = $this->openConnection();
         $result = null;
@@ -69,6 +83,11 @@ class DataManager {
         return $this->getMap($labels, $data); 
     }
     
+    /**
+     * Genereert trenddata. Een gewogen gemiddelde tussen alle bekende gevens. 
+     * De weging is over een aantal uitgevoerde protocolen.
+     * @return Array Flot-compatible array met ongewogen gemiddelden van alle bekende gegevens 
+     */
     public function getJaarTrendData(){
         $con = $this->openConnection();
         $result = $con->query("SELECT * FROM `maandtotalen`");
@@ -85,6 +104,10 @@ class DataManager {
         return $this->getMap($datums, $data); 
     }
     
+    /**
+     * Verkrijgt laatst bekend maand bekend in de database.
+     * @return Date laatst bekende maand in database
+     */
     public function getLaatsteMaand(){
         $con = $this->openConnection();
         $result = $con->query("SELECT MAX(datum) as maxD FROM `protocoltotalen`");
@@ -102,10 +125,10 @@ class DataManager {
      */
     
     /**
-     *
-     * @param type $target
-     * @param type $type
-     * @param type $option
+     * Genereert JSON set uit grafiek. Heeft een $type nodig bekend in de DataManager class voor referentie
+     * Gebruikt self:: wanneer extending op deze class of DataManager::.
+     * @param DataManager::const $type Type invoer bekend in class
+     * @param various $option null of invoer voor specifiek datum/protocol
      * @return json dataset zoals flot die accepteert.
      */
     public function getJSONset($type, $option){
@@ -156,6 +179,11 @@ class DataManager {
      * ******************************************
      */  
     
+    /**
+     * 
+     * @param JSTimestamp $maand datum van bekend
+     * @return Array Flot compatible
+     */
     public function getProtocolLabels($maand){
         $con = $this->openConnection();
         $result = null;
@@ -178,6 +206,11 @@ class DataManager {
         return $this->getMap($labels, $namen);
     }
     
+    /**
+     * Verkrijgt labels van de gegeven maand
+     * @param JSTimestamp $maand maand voor het verkrijgen van labels
+     * @return JSON labels van gegeven maand.
+     */
     public function getProtocolLabelsJSON($maand){
        $output = json_encode($this->getProtocolLabels($maand));
        return $output;
@@ -191,6 +224,13 @@ class DataManager {
      * ******************************************
      */  
     
+    /**
+     * Functie voor het compatible maken van php-arrays voor Flot.
+     * @todo move naar util-class
+     * @param Array $labels De x-punten / namen
+     * @param Array $amounts De y-punten
+     * @return Array Flot compatible gegevens 
+     */
     public static function getMap($labels, $amounts) {
         return array_map('make_pair', $labels, $amounts);
     }
@@ -202,7 +242,10 @@ class DataManager {
      *            Private functies
      * ******************************************
      */
-
+    /** \addtogroup  constants gebruikt voor generatie javascript
+     * @todo refactor naar util-class
+    *  @{
+    */
     private function SQLtoJStimestamp($date){
         return strtotime($date) * 1000;
     }
@@ -222,6 +265,7 @@ class DataManager {
     private function toPercentage($part, $totaal){
         return round(($part/$totaal) * 100, 1, PHP_ROUND_HALF_UP);
     }
+    /** @} */
     // </editor-fold>
     
     // <editor-fold desc="private : connectiviteit">
@@ -257,9 +301,9 @@ class DataManager {
 }
 
 /**
- * 
- * @param type $label
- * @param type $amount
+ * Geisoleerde functie om de gebruikte get_map functie werkbaar te maken
+ * @param array $label x-cords
+ * @param array $amount y-cords
  * @return array flot-compatible 
  */
 function make_pair($label, $amount) {

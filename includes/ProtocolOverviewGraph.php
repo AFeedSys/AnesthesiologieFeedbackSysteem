@@ -1,13 +1,11 @@
 <?php
 
 /**
- * Description of BarGraph
- *
- * @author Coen
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
  */
 class ProtocolOverviewGraph extends FlotGraph {
-
-    //put your code here    
+    
     function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder, $updateType) {
         parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder, $updateType);
     }

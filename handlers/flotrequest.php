@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
+ */
     session_start();    
     //check of ajax-request is
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {

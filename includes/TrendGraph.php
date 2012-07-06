@@ -1,27 +1,20 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of TrendGraph
- *
- * @author Coen
+ * @todo Verdere specialisatie tussen 
+ * @see FlotGraph.php
+ * @author Coen Meulenkamp <coenmeulenkamp - at - gmail.com>
+ * @version ALPHAv1.0 Friday Release
  */
 class TrendGraph extends FlotGraph {
     
-    const JS_MAAND = 1129743000 ;
+    const JS_MAAND = 1129743000 ; /**< JS timestamp die een maand representeerd*/
     
-    private static $minX;
-    private static $maxX;
+    private static $minX; /**< static tussen graphs, geeft alle TrendGraphs gelijke tijdschalen. Minimale X*/
+    private static $maxX; /**< static tussen graphs, geeft alle TrendGraphs gelijke tijdschalen. Maximale X */
 
     function __construct($titel, $type, $holder, $beschrijving, $tooltip, $updatesHolder, $updateType) {
         parent::__construct($titel, $type, "", $holder, $beschrijving, $tooltip, $updatesHolder, $updateType);
-        
-        
-        
         $referenceSet = json_decode(parent::getJsonset(), TRUE);
         $referenceData = $referenceSet['data'];
         $zoek = array();

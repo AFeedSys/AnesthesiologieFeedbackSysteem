@@ -97,6 +97,7 @@ html, body{
     padding: 2px;
     background-color: #fee;
     opacity: 0.80;
+    text-align: center;
 }
 
 .version {
